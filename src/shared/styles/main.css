@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: inherit;
+    color: inherit;
+}
+
+:root {
+    --color-bg-primary: rgb(70, 70, 235);
+    --color-text-primary: rgb(255, 255, 255);
+    --color-text-grey: rgb(204, 204, 204);
+}
+
+#app {
+    font-family: Roboto;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* background-color: var(--color-bg-primary); */
+}
+
+a {
+    color: var(--color-text-grey);
+    text-decoration: none;
+}
