@@ -12,7 +12,10 @@
 <script setup>
 import { http } from '@/shared/api';
 import { useForm } from '@/shared/libs/form';
-import { nextTick, ref } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const form = ref({
     email: {text: 'test@gmail.com'},
@@ -24,7 +27,8 @@ async function clickLogin() {
     if (isError.value) return;
 
     await http.get('/sanctum/csrf-cookie')
-    http.post('/login', data.value)
+    await http.post('/login', data.value)
+    router.push({name: 'play'})
 }
 </script>
 

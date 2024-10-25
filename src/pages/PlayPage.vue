@@ -1,9 +1,10 @@
 <template>
     <div class="play-page page">
         <div class="container">
-            <Coin v-for="coin in coin_model.coins" :coin>
+            <div class="coins">
+                <Coin v-for="coin in coin_model.coins" :coin></Coin>
 
-            </Coin>
+            </div>
         </div>
     </div>
 </template>
@@ -16,5 +17,9 @@ coin_model.getCoins()
 </script>
 
 <style scoped>
-
+.coins {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
 </style>

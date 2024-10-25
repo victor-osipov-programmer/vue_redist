@@ -47,3 +47,7 @@ a {
     color: var(--color-grey);
     text-decoration: none;
 }
+
+hr {
+    border-color: var(--color-white);
+}
