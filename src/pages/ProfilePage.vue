@@ -1,7 +1,7 @@
 <template>
-    <div class="about-page page">
+    <div class="profile-page page">
         <div class="container">
-            О нас
+            Профиль
         </div>
     </div>
 </template>
@@ -10,6 +10,6 @@
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

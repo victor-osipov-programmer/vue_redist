@@ -1,5 +1,5 @@
 <template>
-    <div class="login-page">
+    <div class="login-page page">
         <div class="form">
             <AppInput placeholder="Email" v-model="form.email" email></AppInput>
             <AppInput placeholder="Пароль" v-model="form.password" min="3"></AppInput>

@@ -1,5 +1,5 @@
 <template>
-    <div class="withdrawal-page">
+    <div class="withdrawal-page page">
         <div class="container">
             Страница вывода
         </div>

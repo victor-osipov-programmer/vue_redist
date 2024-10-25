@@ -1,5 +1,5 @@
 <template>
-    <div class="replenishment-page">
+    <div class="replenishment-page page">
         <div class="container">
             Страница пополнения
         </div>

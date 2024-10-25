@@ -9,7 +9,8 @@
 :root {
     --color-bg-primary: rgb(70, 70, 235);
     --color-text-primary: rgb(255, 255, 255);
-    --color-text-grey: rgb(204, 204, 204);
+    --color-grey: rgb(204, 204, 204);
+    --color-white: rgb(248, 248, 248);
 }
 
 #app {
@@ -17,25 +18,32 @@
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
+    background-color: var(--color-white);
 }
 
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
+    /* background-color: var(--color-bg-primary);
+    color: var(--color-text-primary); */
     padding: 1rem;
     border-radius: 5px;
+}
+
+.page {
+    padding-block: 3rem;
 }
 
 .form {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* background-color: var(--color-bg-primary); */
+    background-color: var(--color-bg-primary);
+    padding: 2rem 1rem;
+    border-radius: 5px;
 }
 
 a {
-    color: var(--color-text-grey);
+    color: var(--color-grey);
     text-decoration: none;
 }
