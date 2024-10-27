@@ -1,7 +1,7 @@
 <template>
     <dialog class="dialog" ref="dialog">
         <div class="container dialog__container" @click.stop>
-            <img @click="dialog.close()" class="close" src="@/shared/img/close.png" alt="">
+            <img @click="close" class="close" src="@/shared/img/close.png" alt="">
 
             <slot></slot>
         </div>
@@ -12,10 +12,11 @@
 import { onMounted, useTemplateRef } from 'vue';
 
 const dialog = useTemplateRef('dialog')
+const emit = defineEmits(['close'])
 
 onMounted(() => {
     dialog.value.addEventListener('click', (e) => {
-        dialog.value.close()
+        close()
     })
 })
 
@@ -23,6 +24,7 @@ function open() {
     dialog.value.showModal()
 }
 function close() {
+    emit('close')
     dialog.value.close()
 }
 
@@ -44,8 +46,9 @@ defineExpose({
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
+    opacity: 0.8;
 }
 .dialog__container {
-    padding-block: 2rem;
+    padding-block: 2.5rem;
 }
 </style>

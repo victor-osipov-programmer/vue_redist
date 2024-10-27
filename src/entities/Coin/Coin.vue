@@ -1,77 +1,251 @@
 <template>
-    <div class="coin">
+    <div class="coin info">
         <div class="buy"><span>Покупка</span> {{ coin.price_buy_coin }}</div>
         <div class="sell"><span>Продажа</span> {{ coin.price_sale_coin }}</div>
-        
-       <hr>
 
-        <div class="total-coins"><span>Всего монет</span> {{ coin.total_coins }}</div>
-        <div class="commission"><span>Комиссия</span> {{ coin.commission }}</div>
+        <hr />
 
-        <div class="actions">
-            <AppButton @click="buyCoin" class="buy-button">Купить</AppButton>
-            <AppButton class="sell-button">Продать</AppButton>
-            
+        <div class="total-coins">
+            <span>Всего монет</span> {{ coin.total_coins }}
+        </div>
+        <div class="commission">
+            <span>Комиссия</span> {{ coin.commission }}
         </div>
 
-        <Modal ref="buy_modal">
-            <div><span>id</span><span>{{ coin.id }}</span></div>
-            <div><span>Всего монет</span><span>{{ coin.total_coins }}</span></div>
-            <div><span>Можно купить</span><span>{{ coin.buy_to_bank_coins }}</span></div>
-            <div><span>Можно продать</span><span>{{ coin.sale_to_bank_coins }}</span></div>
-            <div><span>Текущий цикл</span><span>{{ coin.current_cycle }}</span></div>
-            <div><span>Цикл</span><span>{{ coin.one_cycle }}</span></div>
-            <div><span>Продажа</span><span>{{ coin.price_sale_coin }}</span></div>
-            <div><span>Покупка</span><span>{{ coin.price_buy_coin }}</span></div>
-            <div><span>Макс. покупка за цикл</span><span>{{ coin.max_buy_coins_cycle }}</span></div>
-            <div><span>Макс. покупка за игру</span><span>{{ coin.max_buy_coins_game }}</span></div>
-            <div><span>Цена покупки доп. монеты</span><span>{{ coin.price_buy_additional_coin }}</span></div>
-            <div><span>Максимальная покупка доп. монет за цикл</span><span>{{ coin.max_buy_additional_coins_cycle }}</span></div>
-            <div><span>Максимальная покупка доп. монет за игру</span><span>{{ coin.max_buy_additional_coins_game }}</span></div>
-            <div><span>Расход банка</span><span>{{ coin.expenses }}</span></div>
-            <div><span>Доход банка</span><span>{{ coin.income }}</span></div>
-            <div><span>Мин. кол-во для продажи</span><span>{{ coin.min_number_coins_sale }}</span></div>
-            <div><span>Коммисия</span><span>{{ coin.commission }}</span></div>
-            <div><span>creator_id</span><span>{{ coin.creator_id }}</span></div>
-            <div><span>created_at</span><span>{{ coin.created_at }}</span></div>
-            <div><span>updated_at</span><span>{{ coin.updated_at }}</span></div>
+        <div class="actions">
+            <AppButton
+                @click="
+                    modal.open();
+                    tab = 'buy';
+                "
+                class="buy-button"
+                >Купить</AppButton
+            >
+            <AppButton
+                @click="
+                    modal.open();
+                    tab = 'sell';
+                "
+                class="sell-button"
+                >Продать</AppButton
+            >
+        </div>
+
+        <Modal ref="modal" @close="disableValidation">
+            <div class="modal_content">
+                <CoinInfo :coin />
+
+                <Tabs :value="tab">
+                    <TabList>
+                        <Tab value="buy">Купить</Tab>
+                        <Tab value="sell">Продать</Tab>
+                    </TabList>
+
+                    <TabPanels>
+                        <TabPanel class="panel" value="buy">
+                            <AppInput
+                                :disabled="is_bank"
+                                type="number"
+                                class="panel__input"
+                                placeholder="Цена покупки"
+                                v-model="price_coin"
+                                required
+                            ></AppInput>
+                            <AppInput
+                                type="number"
+                                class="panel__input"
+                                placeholder="Кол-во монет"
+                                v-model="number_coins"
+                                required
+                            ></AppInput>
+
+                            <label class="panel__label panel__label1">
+                                <input
+                                    v-model="is_bank"
+                                    class="panel__checkbox"
+                                    type="checkbox"
+                                />
+                                Купить у банка
+                            </label>
+                            <label v-if="is_bank" class="panel__label">
+                                <input
+                                    v-model="additional_coins"
+                                    class="panel__checkbox"
+                                    type="checkbox"
+                                />
+                                Доп. монеты
+                            </label>
+                            <AppButton @click="buyCoins" class="panel__button"
+                                >Купить</AppButton
+                            >
+                        </TabPanel>
+                        <TabPanel class="panel" value="sell">
+                            <AppInput
+                                :disabled="is_bank"
+                                type="number"
+                                class="panel__input"
+                                placeholder="Цена продажи"
+                                v-model="price_coin"
+                                required
+                            ></AppInput>
+                            <AppInput
+                                type="number"
+                                class="panel__input"
+                                placeholder="Кол-во монет"
+                                v-model="number_coins"
+                                required
+                            ></AppInput>
+
+                            <label class="panel__label panel__label1">
+                                <input
+                                    v-model="is_bank"
+                                    class="panel__checkbox"
+                                    type="checkbox"
+                                />
+                                Продать банку
+                            </label>
+                            <AppButton @click="sellCoins" class="panel__button"
+                                >Продать</AppButton
+                            >
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
+            </div>
         </Modal>
     </div>
 </template>
 
 <script lang="ts" setup>
-import AppButton from '@/shared/ui/AppButton.vue';
-import type { ICoin } from './types';
-import { onMounted, ref, useTemplateRef } from 'vue';
-import Modal from '@/features/Modal.vue';
+import AppButton from "@/shared/ui/AppButton.vue";
+import type { ICoin } from "./types";
+import { nextTick, onMounted, ref, useTemplateRef, watchEffect } from "vue";
+import Modal from "@/features/Modal.vue";
+import { http } from "@/shared/api";
+import CoinInfo from "./ui/CoinInfo.vue";
+import { useToast } from "primevue/usetoast";
+import { useForm } from "@/shared/libs/form";
 
-const buy_model = useTemplateRef('buy_modal')
+const props = defineProps<{
+    coin: ICoin;
+}>();
 
-function buyCoin() {
-    buy_model.value.open()
+const tab = ref(null);
+const modal = useTemplateRef("modal");
+const price_coin = ref({ text: props.coin.price_buy_coin });
+const number_coins = ref({ text: null });
+const is_bank = ref(true);
+const additional_coins = ref(false);
+const toast = useToast();
+const form = ref({
+    price_coin,
+    number_coins,
+});
+const validation = ref(false);
+const { isError, data, enableValidation, disableValidation } = useForm(form);
+
+watchEffect(() => {
+    if (tab.value == "buy") {
+        if (is_bank.value) {
+            price_coin.value.text = props.coin.price_buy_coin;
+        }
+        if (additional_coins.value) {
+            price_coin.value.text = props.coin.price_buy_additional_coin;
+        }
+    } else {
+        if (is_bank.value) {
+            price_coin.value.text = props.coin.price_sale_coin;
+        }
+    }
+});
+
+async function sellCoins() {
+    await enableValidation();
+
+    if (isError.value) {
+        return toast.add({
+            severity: "error",
+            summary: "Ошибка",
+            detail: "Заполните правильно поля",
+            life: 3000,
+        });
+    }
+
+    if (is_bank.value) {
+        http.post(`/api/coin/${props.coin.id}/sell/bank`, {
+            number_coins: number_coins.value.text,
+        })
+            .then((response) => {
+                console.log(response.data);
+                toast.add({
+                    severity: "success",
+                    summary: "Коины проданы",
+                    detail: `Вы продали ${number_coins.value.text} коинов за ${response.data.received_currency} рублей`,
+                    life: 3000,
+                });
+            })
+            .catch((err) => {
+                toast.add({
+                    severity: "error",
+                    summary: "Ошибка продажи",
+                    detail: err.response.data?.message,
+                    life: 3000,
+                });
+            });
+    }
 }
 
-defineProps<{
-    coin: ICoin
-}>()
+async function buyCoins() {
+    await enableValidation();
+
+    if (isError.value) {
+        return toast.add({
+            severity: "error",
+            summary: "Ошибка",
+            detail: "Заполните правильно поля",
+            life: 3000,
+        });
+    }
+    if (is_bank.value) {
+        http.post(`/api/coin/${props.coin.id}/buy/bank`, {
+            number_coins: number_coins.value.text,
+            additional_coins: additional_coins.value,
+        })
+            .then((response) => {
+                console.log(response.data);
+                toast.add({
+                    severity: "success",
+                    summary: "Коины куплены",
+                    detail: `Вы купили ${number_coins.value.text} коинов за ${response.data.spent_currency} рублей`,
+                    life: 3000,
+                });
+            })
+            .catch((err) => {
+                toast.add({
+                    severity: "error",
+                    summary: "Ошибка покупки",
+                    detail: err.response.data?.message,
+                    life: 3000,
+                });
+            });
+    }
+}
 </script>
 
 <style scoped>
 .coin {
-    display: grid;
-    gap: 0.2rem;
     background-color: white;
     border-radius: 5px;
     padding: 0.5rem;
-    box-shadow: 0 1px 1px black, 
+    box-shadow: 0px 10px 80px 0 rgba(34, 60, 80, 0.2);
 }
-.total-coins, .buy, .sell, .commission {
+
+.total-coins,
+.buy,
+.sell,
+.commission {
     display: flex;
     justify-content: space-between;
     gap: 2rem;
-}
-.buy-button, .sell-button {
-    width: 100%;
 }
 .actions {
     display: flex;
@@ -79,4 +253,33 @@ defineProps<{
     gap: 0.5rem;
 }
 
+.modal_content {
+    display: flex;
+    gap: 3rem;
+}
+:deep(.panel) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.panel__input {
+    grid-column: 1/3;
+}
+.panel__label1 {
+    margin-top: 0.5rem;
+}
+.panel__label {
+    text-wrap: nowrap;
+    font-size: 0.8rem;
+}
+.panel__checkbox {
+    vertical-align: middle;
+}
+/* .v-tabs {
+    margin-bottom: 2rem;
+    border-radius: 5px;
+} */
+.p-tab {
+    flex-grow: 1;
+}
 </style>

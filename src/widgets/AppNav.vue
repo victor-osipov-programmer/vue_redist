@@ -6,9 +6,6 @@
 </template>
 
 <script setup>
-import UserBalance from '@/features/UserBalance.vue';
-
-
 
 </script>
 

@@ -51,3 +51,9 @@ a {
 hr {
     border-color: var(--color-white);
 }
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}

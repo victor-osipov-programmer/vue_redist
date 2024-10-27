@@ -21,9 +21,21 @@ export function useForm(form) {
 
         return false;
     })
+    const enableValidation = () => {
+        for (let key in form) {
+            form[key].validation = true;
+        }
+    }
+    const disableValidation = () => {
+        for (let key in form) {
+            form[key].validation = false;
+        }
+    }
 
     return {
         isError,
-        data
+        data,
+        enableValidation,
+        disableValidation
     }
 }

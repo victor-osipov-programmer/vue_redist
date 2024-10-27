@@ -2,7 +2,7 @@
     <div class="app-header">
         <div class="app-header__container container">
             <div class="app-header__left">
-                <router-link class="app-logo" :to="{name: 'login'}">header</router-link>
+                <router-link class="app-logo" :to="{name: 'about'}">redist</router-link>
 
                 <AppNav></AppNav>
             </div>

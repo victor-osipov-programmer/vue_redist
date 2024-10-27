@@ -10,7 +10,7 @@ export const routes: RouteRecordRaw[] = [
     {
         'path': '/',
         'name': 'home',
-        redirect: {name: 'login'}
+        redirect: { name: 'play' }
     },
     {
         'path': '/login',
