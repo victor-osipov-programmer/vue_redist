@@ -1,9 +1,8 @@
 <template>
     <div class="login-page page">
         <div class="form">
-            <AppInput placeholder="Email" v-model="form.email" email></AppInput>
-            <AppInput placeholder="Пароль" v-model="form.password" min="3"></AppInput>
-
+            <AppInput placeholder="Email" v-model="form.email" email required></AppInput>
+            <AppInput placeholder="Пароль" v-model="form.password" min="3" required></AppInput>
             <AppButton class="login-button" @click="clickLogin">Войти</AppButton>
         </div>
     </div>
@@ -25,10 +24,18 @@ const form = ref({
     email: {text: 'test@gmail.com'},
     password: {text: 'testtest'},
 })
-const { isError, data } = useForm(form)
+const { isError, data, enableValidation } = useForm(form)
 
 async function clickLogin() {
-    if (isError.value) return;
+    await enableValidation()
+    if (isError.value) {
+        return toast.add({
+            severity: "error",
+            summary: "Ошибка",
+            detail: "Заполните правильно поля",
+            life: 3000,
+        });
+    }
 
     toast.add({severity: 'info', summary: 'Попытка входа...', life: 3000})
     
@@ -45,6 +52,14 @@ async function clickLogin() {
         toast.add({severity: 'success', summary: 'Вы вошли', life: 3000})
         router.push({name: 'play'})
     })
+    .catch(() => {
+        return toast.add({
+            severity: "error",
+            summary: "Неправильный email или пароль",
+            detail: "Заполните правильно поля",
+            life: 3000,
+        });
+    })
 }
 </script>
 
@@ -57,5 +72,9 @@ async function clickLogin() {
 }
 .login-button {
     margin-top: 0.5rem;
+}
+
+.app-input :deep(.error) {
+    color: white;
 }
 </style>

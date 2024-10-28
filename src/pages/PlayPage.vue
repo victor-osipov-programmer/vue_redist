@@ -1,58 +1,220 @@
 <template>
     <div class="play-page page">
         <div class="container">
-            <AppButton @click="modal.open()" color="primary">Создать коин</AppButton>
+            <AppButton
+                class="create-coin-button"
+                @click="modal.open()"
+                color="primary"
+                >Создать коин</AppButton
+            >
 
             <div class="coins">
                 <Coin v-for="coin in coin_model.coins" :coin></Coin>
-                <p class="coins__not" v-if="coin_model.coins.length === 0">Коины не найдены</p>
+                <p class="coins__not" v-if="coin_model.coins.length === 0">
+                    Коины не найдены
+                </p>
             </div>
         </div>
 
-        <Modal ref="modal">
-            <div>
-                <FloatLabel>
-                    <InputNumber v-model="value1" inputId="over_label" mode="currency" currency="USD" locale="en-US" />
-                    <label for="over_label">Всего коинов</label>
+        <Modal ref="modal" @close="disableValidation">
+            <div class="modal_content">
+                <FloatLabel variant="on">
+                    <InputNumber
+                        :invalid="Boolean(form.total_coins.error)"
+                        v-model="form.total_coins.text"
+                        inputId="total_coins"
+                        :min="100"
+                        :max="1000000"
+                    />
+                    <label for="total_coins">*Всего коинов</label>
                 </FloatLabel>
-                <AppInput placeholder="Всего клиноа" type="number"/>
-                'total_coins' => 'required|integer|min:100|max:1000000',
 
-                'one_cycle' => 'nullable|integer|min:1|max:' . config('global.year_in_seconds'),
-                'total_cycles' => 'nullable|integer|min:1|max:1000000',
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.one_cycle.text"
+                        inputId="one_cycle"
+                        :min="1"
+                        :max="1000000"
+                    />
+                    <label for="one_cycle">Секунд в цикле</label>
+                </FloatLabel>
 
-                'price_sale_coin' => 'required|decimal:0,2|min:0.01|max:1000000',
+                <FloatLabel variant="on">
+                    <InputNumber
+                        :invalid="Boolean(form.price_sale_coin.error)"
+                        v-model="form.price_sale_coin.text"
+                        inputId="price_sale_coin"
+                        :min="0.01"
+                        :max="1000000"
+                    />
+                    <label for="price_sale_coin">*Цена продажи коина</label>
+                </FloatLabel>
 
-                'price_buy_coin' => 'required|decimal:0,2|min:0.01|max:1000000',
-                'max_buy_coins_cycle' => 'nullable|integer|min:0|max:1000000',
-                'max_buy_coins_game' => 'nullable|integer|min:0|max:1000000',
+                <FloatLabel variant="on">
+                    <InputNumber
+                        :invalid="Boolean(form.price_buy_coin.error)"
+                        v-model="form.price_buy_coin.text"
+                        inputId="price_buy_coin"
+                        :min="0.01"
+                        :max="1000000"
+                    />
+                    <label for="price_buy_coin">*Цена покупки коина</label>
+                </FloatLabel>
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.max_buy_coins_cycle.text"
+                        inputId="max_buy_coins_cycle"
+                        :min="0"
+                        :max="1000000"
+                    />
+                    <label for="max_buy_coins_cycle"
+                        >Макс. покупка коинов за цикл</label
+                    >
+                </FloatLabel>
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.max_buy_coins_game.text"
+                        inputId="max_buy_coins_game"
+                        :min="0"
+                        :max="1000000"
+                    />
+                    <label for="max_buy_coins_game"
+                        >Макс. покупка коинов за игру</label
+                    >
+                </FloatLabel>
 
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.price_buy_additional_coin.text"
+                        inputId="price_buy_additional_coin"
+                        :min="0.01"
+                        :max="1000000"
+                    />
+                    <label for="price_buy_additional_coin"
+                        >Цена покупки доп. коина</label
+                    >
+                </FloatLabel>
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.price_buy_additional_coin.text"
+                        inputId="price_buy_additional_coin"
+                        :min="0"
+                        :max="1000000"
+                    />
+                    <label for="price_buy_additional_coin"
+                        >Макс. покупка доп. коинов за цикл</label
+                    >
+                </FloatLabel>
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.max_buy_additional_coins_game.text"
+                        inputId="max_buy_additional_coins_game"
+                        :min="0"
+                        :max="1000000"
+                    />
+                    <label for="max_buy_additional_coins_game"
+                        >Макс. покупка доп. коинов за игру</label
+                    >
+                </FloatLabel>
 
-                'price_buy_additional_coin' => 'nullable|decimal:0,2|min:0.01|max:1000000',
-                'max_buy_additional_coins_cycle' => 'nullable|integer|min:0|max:1000000',
-                'max_buy_additional_coins_game' => 'nullable|integer|min:0|max:1000000',
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.min_number_coins_sale.text"
+                        inputId="min_number_coins_sale"
+                        :min="0"
+                        :max="1000000"
+                    />
+                    <label for="min_number_coins_sale"
+                        >Мин. кол-во для продажи</label
+                    >
+                </FloatLabel>
+                <FloatLabel variant="on">
+                    <InputNumber
+                        v-model="form.commission.text"
+                        inputId="commission"
+                        :min="1"
+                        :max="100"
+                    />
+                    <label for="commission">Комиссия</label>
+                </FloatLabel>
 
-                'min_number_coins_sale' => 'nullable|integer|min:0|max:1000000',
-                'commission' => 'nullable|integer|min:1|max:100',
+                <AppButton
+                    class="create-coin"
+                    @click="createCoin"
+                    color="primary"
+                    >Создать</AppButton
+                >
             </div>
         </Modal>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { Coin, useCoinModel } from '@/entities/Coin';
-import { useUserModel } from '@/entities/User/model';
-import Modal from '@/features/Modal.vue';
-import AppInput from '@/shared/ui/AppInput.vue';
-import { useTemplateRef } from 'vue';
-import { useId } from 'vue';
+import { Coin, useCoinModel } from "@/entities/Coin";
+import { useUserModel } from "@/entities/User/model";
+import Modal from "@/features/Modal.vue";
+import { http } from "@/shared/api";
+import { useForm } from "@/shared/libs/form";
+import AppInput from "@/shared/ui/AppInput.vue";
+import { useToast } from "primevue/usetoast";
+import { nextTick, ref, toValue, useTemplateRef, watchEffect } from "vue";
+import { useId } from "vue";
 
-const user_model = useUserModel()
-const coin_model = useCoinModel()
-coin_model.getCoins()
+const toast = useToast();
+const user_model = useUserModel();
+const coin_model = useCoinModel();
+coin_model.getCoins();
 
+const form = ref({
+    total_coins: { text: null, required: true, error: null },
+    one_cycle: { text: 3600, error: null },
+    price_sale_coin: { text: null, required: true, error: null },
+    price_buy_coin: { text: null, required: true, error: null },
+    max_buy_coins_cycle: { text: null, error: null },
+    max_buy_coins_game: { text: null, error: null },
+    price_buy_additional_coin: { text: null, error: null },
+    max_buy_additional_coins_game: { text: null, error: null },
+    min_number_coins_sale: { text: null, error: null },
+    commission: { text: 1, error: null },
+});
 
-const modal = useTemplateRef('modal')
+const { data, isError, enableValidation, disableValidation } = useForm(
+    form,
+    true
+);
+
+const modal = useTemplateRef("modal");
+
+async function createCoin() {
+    await enableValidation();
+
+    if (isError.value) {
+        return toast.add({
+            severity: "error",
+            summary: "Ошибка",
+            detail: "Заполните обязательные поля",
+            life: 3000,
+        });
+    }
+
+    http.post("/api/coin", data.value)
+        .then(() => {
+            coin_model.getCoins();
+            toast.add({
+                severity: "success",
+                summary: "Коин создан",
+                life: 3000,
+            });
+        })
+        .catch(() => {
+            toast.add({
+                severity: "error",
+                summary: "Ошибка, коин не создан",
+                detail: "Попробуйте снова",
+                life: 3000,
+            });
+        });
+}
 </script>
 
 <style scoped>
@@ -67,7 +229,15 @@ const modal = useTemplateRef('modal')
     color: grey;
     text-transform: uppercase;
 }
-.app-button {
+.create-coin-button {
     width: 200px;
+}
+.modal_content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+.create-coin {
+    min-height: 20px;
 }
 </style>
