@@ -19,7 +19,7 @@ import { useUserModel } from '@/entities/User/model';
 import UserBalance from '@/features/UserBalance.vue';
 
 const user_model = useUserModel()
-
+user_model.getUser()
 </script>
 
 <style scoped>

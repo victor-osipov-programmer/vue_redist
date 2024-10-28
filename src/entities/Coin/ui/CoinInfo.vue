@@ -4,8 +4,8 @@
         <div class="box"><span>Комиссия</span><span>{{ coin.commission }}</span></div>
         <div class="box"><span>Цикл</span><span>{{ coin.one_cycle }}</span></div>
         <hr>
-        <div class="box"><span>Монеты банка (для покупки)</span><span>{{ coin.buy_to_bank_coins }}</span></div>
-        <div class="box"><span>Монеты банка (для продажи)</span><span>{{ coin.sale_to_bank_coins }}</span></div>
+        <div class="box"><span>Монеты банка для покупки</span><span>{{ coin.buy_to_bank_coins }}</span></div>
+        <div class="box"><span>Монеты банка для продажи</span><span>{{ coin.sale_to_bank_coins }}</span></div>
         <hr>
         <div class="box"><span>Расход банка</span><span>{{ coin.expenses }}</span></div>
         <div class="box"><span>Доход банка</span><span>{{ coin.income }}</span></div>

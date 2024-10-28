@@ -14,18 +14,12 @@
 
         <div class="actions">
             <AppButton
-                @click="
-                    modal.open();
-                    tab = 'buy';
-                "
+                @click="openBuyPanel"
                 class="buy-button"
                 >Купить</AppButton
             >
             <AppButton
-                @click="
-                    modal.open();
-                    tab = 'sell';
-                "
+                @click="openSellPanel"
                 class="sell-button"
                 >Продать</AppButton
             >
@@ -37,8 +31,8 @@
 
                 <Tabs :value="tab">
                     <TabList>
-                        <Tab value="buy">Купить</Tab>
-                        <Tab value="sell">Продать</Tab>
+                        <Tab @click="openBuyPanel" value="buy">Купить</Tab>
+                        <Tab @click="openSellPanel" value="sell">Продать</Tab>
                     </TabList>
 
                     <TabPanels>
@@ -124,23 +118,26 @@ import { http } from "@/shared/api";
 import CoinInfo from "./ui/CoinInfo.vue";
 import { useToast } from "primevue/usetoast";
 import { useForm } from "@/shared/libs/form";
+import { useUserModel } from "../User/model";
+import { useCoinModel } from "./model";
 
 const props = defineProps<{
     coin: ICoin;
 }>();
 
-const tab = ref(null);
+const user_model = useUserModel()
+const coin_model = useCoinModel()
+const tab = ref('buy');
 const modal = useTemplateRef("modal");
 const price_coin = ref({ text: props.coin.price_buy_coin });
 const number_coins = ref({ text: null });
-const is_bank = ref(true);
+const is_bank = ref(false);
 const additional_coins = ref(false);
 const toast = useToast();
 const form = ref({
     price_coin,
     number_coins,
 });
-const validation = ref(false);
 const { isError, data, enableValidation, disableValidation } = useForm(form);
 
 watchEffect(() => {
@@ -157,6 +154,15 @@ watchEffect(() => {
         }
     }
 });
+
+function openBuyPanel() {
+    modal.value.open();
+    tab.value = 'buy';
+}
+function openSellPanel() {
+    modal.value.open();
+    tab.value = 'sell';
+}
 
 async function sellCoins() {
     await enableValidation();
@@ -212,6 +218,8 @@ async function buyCoins() {
         })
             .then((response) => {
                 console.log(response.data);
+                updateModels()
+                
                 toast.add({
                     severity: "success",
                     summary: "Коины куплены",
@@ -227,7 +235,43 @@ async function buyCoins() {
                     life: 3000,
                 });
             });
+    } else {
+        http.post(`/api/coin/${props.coin.id}/buy`, {
+            number_coins: number_coins.value.text,
+            price_coin: price_coin.value.text,
+        })
+            .then((response) => {
+                console.log(response.data);
+                updateModels()
+                
+                toast.add({
+                    severity: "success",
+                    summary: "Ордер на покупку создан",
+                    life: 3000,
+                });
+                if (response.data.received_coins && response.data.received_coins !== 0) {
+                    toast.add({
+                        severity: "success",
+                        summary: `Покупка монет с ID ${props.coin.id}`,
+                        detail: `Вы купили ${response.data.received_coins} монет`,
+                        life: 3000,
+                    });
+                }
+            })
+            .catch((err) => {
+                toast.add({
+                    severity: "error",
+                    summary: "Ошибка покупки",
+                    detail: err.response.data?.message,
+                    life: 3000,
+                });
+            });
     }
+}
+
+function updateModels() {
+    user_model.getUser()
+    coin_model.getCoins()
 }
 </script>
 

@@ -1,14 +1,18 @@
 <template>
     <div class="play-page page">
         <div class="container">
-            <AppButton
-                class="create-coin-button"
-                @click="modal.open()"
-                color="primary"
-                >Создать коин</AppButton
-            >
+            
 
             <div class="coins">
+                <div class="coins__actions">
+                    <AppButton
+                        class="create-coin-button"
+                        @click="modal.open()"
+                        color="primary"
+                        >Создать коин</AppButton
+                    >
+                </div>
+                
                 <Coin v-for="coin in coin_model.coins" :coin></Coin>
                 <p class="coins__not" v-if="coin_model.coins.length === 0">
                     Коины не найдены
@@ -205,6 +209,7 @@ async function createCoin() {
                 summary: "Коин создан",
                 life: 3000,
             });
+            modal.value.close()
         })
         .catch(() => {
             toast.add({
@@ -222,7 +227,7 @@ async function createCoin() {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
-    margin-top: 3rem;
+    /* margin-top: 3rem; */
 }
 
 .coins__not {
@@ -230,11 +235,16 @@ async function createCoin() {
     text-transform: uppercase;
 }
 .create-coin-button {
-    width: 200px;
+    grid-column: span 1;
+}
+.coins__actions {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: span 4;
 }
 .modal_content {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 .create-coin {

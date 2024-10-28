@@ -1,6 +1,7 @@
 <template>
     <div class="login-page page">
         <div class="form">
+            <h3 class="form__header">Войти</h3>
             <AppInput placeholder="Email" v-model="form.email" email required></AppInput>
             <AppInput placeholder="Пароль" v-model="form.password" min="3" required></AppInput>
             <AppButton class="login-button" @click="clickLogin">Войти</AppButton>
@@ -76,5 +77,11 @@ async function clickLogin() {
 
 .app-input :deep(.error) {
     color: white;
+}
+.form__header {
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
 }
 </style>
