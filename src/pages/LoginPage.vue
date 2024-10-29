@@ -41,15 +41,14 @@ async function clickLogin() {
     toast.add({severity: 'info', summary: 'Попытка входа...', life: 3000})
     
 
-    await Promise.allSettled([
-        http.get('/sanctum/csrf-cookie'),
-        http.get('/logout')
-    ])
+    const requests = [http.get('/sanctum/csrf-cookie')]
+    if (user_model.is_login) requests.push(http.get('/logout'))
+    await Promise.allSettled(requests)
     
     .catch(() => {})
     http.post('/login', data.value)
     .then(() => {
-        user_model.getUser()
+        user_model.login()
         toast.add({severity: 'success', summary: 'Вы вошли', life: 3000})
         router.push({name: 'play'})
     })

@@ -5,16 +5,23 @@ import { http } from "@/shared/api";
 
 export const useUserModel = defineStore("user", () => {
     const user = ref(null);
-    async function getUser() {
-        const response = await fetchUser();
-        is_login.value = true;
-        user.value = response.data;
-    }
-    const is_login = ref(Boolean(localStorage.getItem("is_login")));
+    
+    const is_login = ref(localStorage.getItem("is_login") == 'true' ? true : false);
     watch(is_login, () => {
         localStorage.setItem("is_login", String(is_login.value));
     });
 
+    async function login() {
+        const response = await fetchUser();
+        is_login.value = true;
+        user.value = response.data;
+    }
+    async function getUser() {
+        if (is_login.value) {
+            const response = await fetchUser();
+            user.value = response.data;
+        }
+    }
     async function logout() {
         is_login.value = false;
         user.value = null;
@@ -27,5 +34,6 @@ export const useUserModel = defineStore("user", () => {
         getUser,
         logout,
         is_login,
+        login
     };
 });
