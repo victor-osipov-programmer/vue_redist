@@ -9,13 +9,13 @@
                         class="create-coin-button"
                         @click="modal.open()"
                         color="primary"
-                        >Создать коин</AppButton
+                        >Создать монету</AppButton
                     >
                 </div>
                 
                 <Coin v-for="coin in coin_model.coins" :coin></Coin>
                 <p class="coins__not" v-if="coin_model.coins.length === 0">
-                    Коины не найдены
+                    Монеты не найдены
                 </p>
             </div>
         </div>
@@ -30,7 +30,7 @@
                         :min="100"
                         :max="1000000"
                     />
-                    <label for="total_coins">*Всего коинов</label>
+                    <label for="total_coins">*Всего монет</label>
                 </FloatLabel>
 
                 <FloatLabel variant="on">
@@ -51,7 +51,7 @@
                         :min="0.01"
                         :max="1000000"
                     />
-                    <label for="price_sale_coin">*Цена продажи коина</label>
+                    <label for="price_sale_coin">*Цена продажи монеты</label>
                 </FloatLabel>
 
                 <FloatLabel variant="on">
@@ -62,7 +62,7 @@
                         :min="0.01"
                         :max="1000000"
                     />
-                    <label for="price_buy_coin">*Цена покупки коина</label>
+                    <label for="price_buy_coin">*Цена покупки монеты</label>
                 </FloatLabel>
                 <FloatLabel variant="on">
                     <InputNumber
@@ -72,7 +72,7 @@
                         :max="1000000"
                     />
                     <label for="max_buy_coins_cycle"
-                        >Макс. покупка коинов за цикл</label
+                        >Макс. покупка монет за цикл</label
                     >
                 </FloatLabel>
                 <FloatLabel variant="on">
@@ -83,7 +83,7 @@
                         :max="1000000"
                     />
                     <label for="max_buy_coins_game"
-                        >Макс. покупка коинов за игру</label
+                        >Макс. покупка монет за игру</label
                     >
                 </FloatLabel>
 
@@ -95,18 +95,18 @@
                         :max="1000000"
                     />
                     <label for="price_buy_additional_coin"
-                        >Цена покупки доп. коина</label
+                        >Цена покупки доп. монеты</label
                     >
                 </FloatLabel>
                 <FloatLabel variant="on">
                     <InputNumber
-                        v-model="form.price_buy_additional_coin.text"
-                        inputId="price_buy_additional_coin"
+                        v-model="form.max_buy_additional_coins_cycle.text"
+                        inputId="max_buy_additional_coins_cycle"
                         :min="0"
                         :max="1000000"
                     />
-                    <label for="price_buy_additional_coin"
-                        >Макс. покупка доп. коинов за цикл</label
+                    <label for="max_buy_additional_coins_cycle"
+                        >Макс. покупка доп. монет за цикл</label
                     >
                 </FloatLabel>
                 <FloatLabel variant="on">
@@ -117,7 +117,7 @@
                         :max="1000000"
                     />
                     <label for="max_buy_additional_coins_game"
-                        >Макс. покупка доп. коинов за игру</label
+                        >Макс. покупка доп. монет за игру</label
                     >
                 </FloatLabel>
 
@@ -170,13 +170,14 @@ const coin_model = useCoinModel();
 coin_model.getCoins();
 
 const form = ref({
-    total_coins: { text: null, required: true, error: null },
+    total_coins: { text: 1000, required: true, error: null },
     one_cycle: { text: 3600, error: null },
     price_sale_coin: { text: null, required: true, error: null },
     price_buy_coin: { text: null, required: true, error: null },
     max_buy_coins_cycle: { text: null, error: null },
     max_buy_coins_game: { text: null, error: null },
     price_buy_additional_coin: { text: null, error: null },
+    max_buy_additional_coins_cycle: { text: null, error: null },
     max_buy_additional_coins_game: { text: null, error: null },
     min_number_coins_sale: { text: null, error: null },
     commission: { text: 1, error: null },
@@ -206,7 +207,7 @@ async function createCoin() {
             coin_model.getCoins();
             toast.add({
                 severity: "success",
-                summary: "Коин создан",
+                summary: "Монета создана",
                 life: 3000,
             });
             modal.value.close()
@@ -214,7 +215,7 @@ async function createCoin() {
         .catch(() => {
             toast.add({
                 severity: "error",
-                summary: "Ошибка, коин не создан",
+                summary: "Ошибка, монета не создана",
                 detail: "Попробуйте снова",
                 life: 3000,
             });

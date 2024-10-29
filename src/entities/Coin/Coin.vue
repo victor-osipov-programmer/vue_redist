@@ -6,6 +6,9 @@
         <hr />
 
         <div class="total-coins">
+            <span>Ваши монеты</span> {{ coin.user_coins }}
+        </div>
+        <div class="total-coins">
             <span>Всего монет</span> {{ coin.total_coins }}
         </div>
         <div class="commission">
@@ -182,10 +185,35 @@ async function sellCoins() {
         })
             .then((response) => {
                 console.log(response.data);
+                updateModels()
+
                 toast.add({
                     severity: "success",
-                    summary: "Коины проданы",
-                    detail: `Вы продали ${number_coins.value.text} коинов за ${response.data.received_currency} рублей`,
+                    summary: "Монеты проданы",
+                    detail: `Вы продали ${number_coins.value.text} монет за ${response.data.received_currency} рублей`,
+                    life: 3000,
+                });
+            })
+            .catch((err) => {
+                toast.add({
+                    severity: "error",
+                    summary: "Ошибка продажи",
+                    detail: err.response.data?.message,
+                    life: 3000,
+                });
+            });
+    } else {
+        http.post(`/api/coin/${props.coin.id}/sell`, {
+            number_coins: number_coins.value.text,
+            price_coin: price_coin.value.text,
+        })
+            .then((response) => {
+                console.log(response.data);
+                updateModels()
+
+                toast.add({
+                    severity: "success",
+                    summary: "Ордер на продажу создан",
                     life: 3000,
                 });
             })
@@ -222,8 +250,8 @@ async function buyCoins() {
                 
                 toast.add({
                     severity: "success",
-                    summary: "Коины куплены",
-                    detail: `Вы купили ${number_coins.value.text} коинов за ${response.data.spent_currency} рублей`,
+                    summary: "Монеты куплены",
+                    detail: `Вы купили ${number_coins.value.text} монет за ${response.data.spent_currency} рублей`,
                     life: 3000,
                 });
             })
@@ -249,14 +277,6 @@ async function buyCoins() {
                     summary: "Ордер на покупку создан",
                     life: 3000,
                 });
-                if (response.data.received_coins && response.data.received_coins !== 0) {
-                    toast.add({
-                        severity: "success",
-                        summary: `Покупка монет с ID ${props.coin.id}`,
-                        detail: `Вы купили ${response.data.received_coins} монет`,
-                        life: 3000,
-                    });
-                }
             })
             .catch((err) => {
                 toast.add({

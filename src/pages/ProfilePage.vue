@@ -15,7 +15,7 @@ const user_model = useUserModel()
 const toast = useToast()
 
 async function logout() {
-    await user_model.logout()
+    user_model.logout()
     toast.add({severity: 'info', summary: 'Вы вышли из аккаунта', life: 3000})
 }
 </script>
