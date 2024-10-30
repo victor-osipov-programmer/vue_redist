@@ -41,6 +41,7 @@ http.interceptors.response.use(function (response) {
             "Bank income should be more than expenses",
             "Доход банка должен быть больше расходов"
         )
-        .replace("Your coins balance is", "Ваш баланс монет");
+        .replace("Your coins balance is", "Ваш баланс монет")
+        .replace("Unauthenticated.", "Вы не авторизованы");
     return Promise.reject(error);
 });

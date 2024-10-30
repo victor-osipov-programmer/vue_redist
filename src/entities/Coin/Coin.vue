@@ -5,7 +5,7 @@
 
         <hr />
 
-        <div class="total-coins">
+        <div v-if="coin.user_coins" class="total-coins">
             <span>Ваши монеты</span> {{ coin.user_coins }}
         </div>
         <div class="total-coins">
@@ -277,6 +277,10 @@ async function buyCoins() {
                     summary: "Ордер на покупку создан",
                     life: 3000,
                 });
+
+                window.Echo.private(`orders.${response.data.orderId}`).listen("Buy", (e) => {
+                    console.log(e.order);
+                });
             })
             .catch((err) => {
                 toast.add({
@@ -345,5 +349,8 @@ function updateModels() {
 } */
 .p-tab {
     flex-grow: 1;
+}
+:deep(.dialog__container) {
+    min-height: 440px;
 }
 </style>

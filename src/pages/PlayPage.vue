@@ -212,7 +212,7 @@ async function createCoin() {
             });
             modal.value.close()
         })
-        .catch(() => {
+        .catch((err) => {
             toast.add({
                 severity: "error",
                 summary: "Ошибка, монета не создана",
