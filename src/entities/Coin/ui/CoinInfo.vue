@@ -1,16 +1,11 @@
 <template>
     <div class="coin-info info">
         <div class="progress">
-            <ProgressBar  @click="op.toggle($event)" :value="percent"> 
+            <ProgressBar :value="percent"> 
                 <template v-if="percent >= 20">
                     {{ coin.income }}/{{ coin.expenses }} 
                 </template>
             </ProgressBar>
-            <Popover ref="op">
-                <div class="flex flex-col gap-4 w-[25rem]">
-                    test
-                </div>
-            </Popover>
         </div>
         
         <Accordion value="0">
@@ -53,14 +48,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, useTemplateRef } from 'vue';
+import { computed } from 'vue';
 import type { ICoin } from '../types';
 
 const props = defineProps<{
     coin: ICoin
 }>()
-
-const op = useTemplateRef('op')
 
 // const show_percent = computed(() => {
 //     return ;
