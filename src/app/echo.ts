@@ -1,3 +1,4 @@
+import { http } from "@/shared/api";
 import Echo from "laravel-echo";
 
 import Pusher from "pusher-js";
@@ -11,5 +12,21 @@ window.Echo = new Echo({
     wssPort: import.meta.env.VITE_REVERB_PORT,
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? "https") === "https",
     enabledTransports: ["ws", "wss"],
+    authorizer: (channel, options) => {
+        return {
+            authorize: (socketId, callback) => {
+                http.post('/broadcasting/auth', {
+                    socket_id: socketId,
+                    channel_name: channel.name
+                })
+                    .then(response => {
+                        callback(null, response.data);
+                    })
+                    .catch(error => {
+                        callback(error);
+                    });
+            }
+        };
+    },
 });
 

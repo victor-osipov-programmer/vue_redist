@@ -1,6 +1,6 @@
 <template>
     <dialog class="dialog" ref="dialog">
-        <div class="container dialog__container" @click.stop>
+        <div class="container dialog__container" @mousedown.stop>
             <img @click="close" class="close" src="@/shared/img/close.png" alt="">
 
             <slot></slot>
@@ -15,7 +15,7 @@ const dialog = useTemplateRef('dialog')
 const emit = defineEmits(['close'])
 
 onMounted(() => {
-    dialog.value.addEventListener('click', (e) => {
+    dialog.value.addEventListener('mousedown', (e) => {
         close()
     })
 })

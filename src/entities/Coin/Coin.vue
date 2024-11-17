@@ -36,6 +36,7 @@
                     <TabList>
                         <Tab @click="openBuyPanel" value="buy">Купить</Tab>
                         <Tab @click="openSellPanel" value="sell">Продать</Tab>
+                        <Tab @click="openOrdersPanel" value="orders">Ордера</Tab>
                     </TabList>
 
                     <TabPanels>
@@ -105,6 +106,9 @@
                                 >Продать</AppButton
                             >
                         </TabPanel>
+                        <TabPanel class="panel" value="orders">
+                            Текущие ордера
+                        </TabPanel>
                     </TabPanels>
                 </Tabs>
             </div>
@@ -165,6 +169,10 @@ function openBuyPanel() {
 function openSellPanel() {
     modal.value.open();
     tab.value = 'sell';
+}
+function openOrdersPanel() {
+    modal.value.open();
+    tab.value = 'orders';
 }
 
 async function sellCoins() {
@@ -269,7 +277,7 @@ async function buyCoins() {
             price_coin: price_coin.value.text,
         })
             .then((response) => {
-                console.log(response.data);
+                console.log(response);
                 updateModels()
                 
                 toast.add({
@@ -277,12 +285,9 @@ async function buyCoins() {
                     summary: "Ордер на покупку создан",
                     life: 3000,
                 });
-
-                window.Echo.private(`orders.${response.data.orderId}`).listen("Buy", (e) => {
-                    console.log(e.order);
-                });
             })
             .catch((err) => {
+                console.log(123, err)
                 toast.add({
                     severity: "error",
                     summary: "Ошибка покупки",

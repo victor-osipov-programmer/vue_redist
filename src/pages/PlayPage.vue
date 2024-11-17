@@ -23,6 +23,17 @@
         <Modal ref="modal" @close="disableValidation">
             <div class="modal_content">
                 <FloatLabel variant="on">
+                    <InputText
+                        :invalid="Boolean(form.name.error)"
+                        v-model="form.name.text"
+                        inputId="name"
+                        :min="100"
+                        :max="1000000"
+                    />
+                    <label for="name">*Название</label>
+                </FloatLabel>
+
+                <FloatLabel variant="on">
                     <InputNumber
                         :invalid="Boolean(form.total_coins.error)"
                         v-model="form.total_coins.text"
@@ -42,18 +53,17 @@
                     />
                     <label for="one_cycle">Секунд в цикле</label>
                 </FloatLabel>
-
                 <FloatLabel variant="on">
                     <InputNumber
-                        :invalid="Boolean(form.price_sale_coin.error)"
-                        v-model="form.price_sale_coin.text"
-                        inputId="price_sale_coin"
-                        :min="0.01"
-                        :max="1000000"
+                        v-model="form.commission.text"
+                        inputId="commission"
+                        :min="1"
+                        :max="100"
                     />
-                    <label for="price_sale_coin">*Цена продажи монеты</label>
+                    <label for="commission">Комиссия</label>
                 </FloatLabel>
 
+            
                 <FloatLabel variant="on">
                     <InputNumber
                         :invalid="Boolean(form.price_buy_coin.error)"
@@ -123,6 +133,17 @@
 
                 <FloatLabel variant="on">
                     <InputNumber
+                        :invalid="Boolean(form.price_sale_coin.error)"
+                        v-model="form.price_sale_coin.text"
+                        inputId="price_sale_coin"
+                        :min="0.01"
+                        :max="1000000"
+                    />
+                    <label for="price_sale_coin">*Цена продажи монеты</label>
+                </FloatLabel>
+
+                <FloatLabel variant="on">
+                    <InputNumber
                         v-model="form.min_number_coins_sale.text"
                         inputId="min_number_coins_sale"
                         :min="0"
@@ -132,15 +153,7 @@
                         >Мин. кол-во для продажи</label
                     >
                 </FloatLabel>
-                <FloatLabel variant="on">
-                    <InputNumber
-                        v-model="form.commission.text"
-                        inputId="commission"
-                        :min="1"
-                        :max="100"
-                    />
-                    <label for="commission">Комиссия</label>
-                </FloatLabel>
+                
 
                 <AppButton
                     class="create-coin"
@@ -170,6 +183,7 @@ const coin_model = useCoinModel();
 coin_model.getCoins();
 
 const form = ref({
+    name: { text: null, required: true, error: null },
     total_coins: { text: 1000, required: true, error: null },
     one_cycle: { text: 3600, error: null },
     price_sale_coin: { text: null, required: true, error: null },
@@ -250,5 +264,8 @@ async function createCoin() {
 }
 .create-coin {
     min-height: 20px;
+}
+.p-floatlabel:first-child {
+    grid-column: span 3;
 }
 </style>

@@ -28,7 +28,7 @@
     "@types/node": "^20.16.11",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vue/tsconfig": "^0.5.1",
-    "laravel-echo": "^1.16.1",
+    "laravel-echo": "^1.17.0",
     "npm-run-all2": "^6.2.3",
     "pusher-js": "^8.4.0-rc2",
     "typescript": "~5.5.4",

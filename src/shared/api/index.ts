@@ -1,3 +1,4 @@
+import { useUserModel } from '@/entities/User/model';
 import axios from 'axios'
 
 export const http = axios.create({
@@ -43,5 +44,12 @@ http.interceptors.response.use(function (response) {
         )
         .replace("Your coins balance is", "Ваш баланс монет")
         .replace("Unauthenticated.", "Вы не авторизованы");
+
+    if (error.status == 401) {
+        const user_model = useUserModel()
+        user_model.is_login = false;
+        window.router.push({name: 'login'})
+    }
+
     return Promise.reject(error);
 });
