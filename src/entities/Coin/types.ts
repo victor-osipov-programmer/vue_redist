@@ -1,4 +1,5 @@
 export interface ICoin {
+    name: string;
     id: number;
     total_coins: number;
     buy_to_bank_coins: number;

@@ -5,15 +5,18 @@
 
         <hr />
 
+        <div class="coin-text">
+            <span>Название</span> {{ coin.name }}
+        </div>
         <div class="total-coins">
             <span>Ваши монеты</span> {{ coin.user_coins ?? 0 }}
         </div>
-        <div class="total-coins">
+        <!-- <div class="total-coins">
             <span>Всего монет</span> {{ coin.total_coins }}
         </div>
         <div class="commission">
             <span>Комиссия</span> {{ coin.commission }}
-        </div>
+        </div> -->
 
         <div class="actions">
             <AppButton
@@ -315,7 +318,8 @@ function updateModels() {
 .total-coins,
 .buy,
 .sell,
-.commission {
+.commission,
+.coin-text {
     display: flex;
     justify-content: space-between;
     gap: 2rem;

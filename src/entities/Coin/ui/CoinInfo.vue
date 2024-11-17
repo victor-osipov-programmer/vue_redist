@@ -2,9 +2,9 @@
     <div class="coin-info info">
         <div class="progress">
             <ProgressBar v-tooltip.top="`100% = продажа банку открыта`" :value="percent"> 
-                <template v-if="percent >= 20">
+                <!-- <template v-if="percent >= 20">
                     {{ coin.income }}/{{ coin.expenses }} 
-                </template>
+                </template> -->
             </ProgressBar>
         </div>
         
@@ -12,7 +12,8 @@
             <AccordionPanel value="0">
                 <AccordionHeader>Общее</AccordionHeader>
                 <AccordionContent>
-                    <div v-if="coin.user_coins" class="box"><span>Ваши монеты</span><span>{{ coin.user_coins }}</span></div>
+                    <div class="box"><span>Название</span><span>{{ coin.name }}</span></div>
+                    <div class="box"><span>Ваши монеты</span><span>{{ coin.user_coins ?? 0 }}</span></div>
                     <div class="box"><span>Всего монет</span><span>{{ coin.total_coins }}</span></div>
                     <div class="box"><span>Комиссия</span><span>{{ coin.commission }}%</span></div>
                     <div class="box"><span>Цикл</span><span>{{ coin.one_cycle }} сек.</span></div>
