@@ -63,3 +63,9 @@ hr {
 dialog {
     /* background-color: white; */
 }
+.p-dialog-header {
+    padding-block: 10px !important;
+}
+.p-component {
+    font-family: Roboto;
+}

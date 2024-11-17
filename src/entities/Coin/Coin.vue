@@ -5,8 +5,8 @@
 
         <hr />
 
-        <div v-if="coin.user_coins" class="total-coins">
-            <span>Ваши монеты</span> {{ coin.user_coins }}
+        <div class="total-coins">
+            <span>Ваши монеты</span> {{ coin.user_coins ?? 0 }}
         </div>
         <div class="total-coins">
             <span>Всего монет</span> {{ coin.total_coins }}
@@ -28,7 +28,7 @@
             >
         </div>
 
-        <Modal ref="modal" @close="disableValidation">
+        <Dialog @hide="disableValidation" v-model:visible="modal" modal header=" " :style="{height: '450px'}">
             <div class="modal_content">
                 <CoinInfo :coin />
 
@@ -112,7 +112,7 @@
                     </TabPanels>
                 </Tabs>
             </div>
-        </Modal>
+        </Dialog>
     </div>
 </template>
 
@@ -135,7 +135,7 @@ const props = defineProps<{
 const user_model = useUserModel()
 const coin_model = useCoinModel()
 const tab = ref('buy');
-const modal = useTemplateRef("modal");
+const modal = ref(false);
 const price_coin = ref({ text: props.coin.price_buy_coin });
 const number_coins = ref({ text: null });
 const is_bank = ref(false);
@@ -163,15 +163,15 @@ watchEffect(() => {
 });
 
 function openBuyPanel() {
-    modal.value.open();
+    modal.value = true;
     tab.value = 'buy';
 }
 function openSellPanel() {
-    modal.value.open();
+    modal.value = true;
     tab.value = 'sell';
 }
 function openOrdersPanel() {
-    modal.value.open();
+    modal.value = true;
     tab.value = 'orders';
 }
 
@@ -244,7 +244,7 @@ async function buyCoins() {
             severity: "error",
             summary: "Ошибка",
             detail: "Заполните правильно поля",
-            life: 3000,
+            // life: 3000,
         });
     }
     if (is_bank.value) {
@@ -353,9 +353,8 @@ function updateModels() {
     border-radius: 5px;
 } */
 .p-tab {
+    padding-top: 0;
     flex-grow: 1;
 }
-:deep(.dialog__container) {
-    min-height: 440px;
-}
+
 </style>

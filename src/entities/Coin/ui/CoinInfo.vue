@@ -1,7 +1,7 @@
 <template>
     <div class="coin-info info">
         <div class="progress">
-            <ProgressBar :value="percent"> 
+            <ProgressBar v-tooltip.top="`100% = продажа банку открыта`" :value="percent"> 
                 <template v-if="percent >= 20">
                     {{ coin.income }}/{{ coin.expenses }} 
                 </template>

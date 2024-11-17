@@ -23,6 +23,7 @@ app.use(PrimeVue, {
         preset: Aura
     }
 });
+
 app.use(ToastService);
 app.directive("tooltip", Tooltip);
 app.mount('#app')

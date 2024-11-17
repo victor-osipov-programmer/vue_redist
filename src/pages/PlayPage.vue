@@ -7,7 +7,7 @@
                 <div class="coins__actions">
                     <AppButton
                         class="create-coin-button"
-                        @click="modal.open()"
+                        @click="modal = true"
                         color="primary"
                         >Создать монету</AppButton
                     >
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <Modal ref="modal" @close="disableValidation">
+        <Dialog @hide="disableValidation" v-model:visible="modal" modal header="Создание монеты">
             <div class="modal_content">
                 <FloatLabel variant="on">
                     <InputText
@@ -162,7 +162,7 @@
                     >Создать</AppButton
                 >
             </div>
-        </Modal>
+        </Dialog>
     </div>
 </template>
 
@@ -202,7 +202,7 @@ const { data, isError, enableValidation, disableValidation } = useForm(
     true
 );
 
-const modal = useTemplateRef("modal");
+const modal = ref(false);
 
 async function createCoin() {
     await enableValidation();
@@ -224,7 +224,7 @@ async function createCoin() {
                 summary: "Монета создана",
                 life: 3000,
             });
-            modal.value.close()
+            modal.value = false
         })
         .catch((err) => {
             toast.add({
@@ -259,13 +259,16 @@ async function createCoin() {
 }
 .modal_content {
     display: grid;
+    grid-template-rows: auto;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+    padding-block: 1.5rem;
 }
 .create-coin {
     min-height: 20px;
 }
 .p-floatlabel:first-child {
     grid-column: span 3;
+    margin-bottom: 1rem;
 }
 </style>
