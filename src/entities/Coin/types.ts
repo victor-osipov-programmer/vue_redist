@@ -6,7 +6,7 @@ export interface ICoin {
     sale_to_bank_coins: number;
     current_cycle: number;
     one_cycle: number;
-    total_cycles: null;
+    total_cycles: number;
     price_sale_coin: number;
     price_buy_coin: number;
     max_buy_coins_cycle: number;

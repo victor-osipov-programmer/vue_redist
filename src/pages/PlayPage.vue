@@ -1,26 +1,26 @@
 <template>
     <div class="play-page page">
         <div class="container">
-            
-
             <div class="coins">
                 <div class="coins__actions">
                     <AppButton
                         class="create-coin-button"
-                        @click="modal = true"
+                        @click="create_coin_dialog = true"
                         color="primary"
                         >Создать монету</AppButton
                     >
                 </div>
                 
-                <Coin v-for="coin in coin_model.coins" :coin></Coin>
+                <Coin v-for="coin in coin_model.coins" :coin @click="selectCoin(coin)" @open:buy_panel="openBuyPanel" @open:sell_panel="openSellPanel"></Coin>
                 <p class="coins__not" v-if="coin_model.coins.length === 0">
                     Монеты не найдены
                 </p>
             </div>
         </div>
 
-        <Dialog @hide="disableValidation" v-model:visible="modal" modal header="Создание монеты">
+        <CoinDialog v-if="selected_coin" v-model="coin_dialog" v-model:tab="coind_dialog_tab" :coin="selected_coin"/>
+
+        <Dialog @hide="disableValidation" v-model:visible="create_coin_dialog" modal header="Создание монеты">
             <div class="modal_content">
                 <FloatLabel variant="on">
                     <InputText
@@ -167,21 +167,31 @@
 </template>
 
 <script lang="ts" setup>
-import { Coin, useCoinModel } from "@/entities/Coin";
-import { useUserModel } from "@/entities/User/model";
-import Modal from "@/features/Modal.vue";
+import { Coin, useCoinModel, type ICoin } from "@/entities/Coin";
 import { http } from "@/shared/api";
 import { useForm } from "@/shared/libs/form";
-import AppInput from "@/shared/ui/AppInput.vue";
 import { useToast } from "primevue/usetoast";
-import { nextTick, ref, toValue, useTemplateRef, watchEffect } from "vue";
-import { useId } from "vue";
+import { nextTick, ref, useTemplateRef } from "vue";
+import CoinDialog from "@/features/CoinDialog.vue";
+import { useOrderModel } from "@/entities/Order/model";
 
 const toast = useToast();
-const user_model = useUserModel();
 const coin_model = useCoinModel();
+const order_model = useOrderModel();
+// const coin_dialog = ref(false)
+const coin_dialog = ref(false)
+const coind_dialog_tab = ref('buy')
 coin_model.getCoins();
+order_model.getOrders()
 
+function openBuyPanel() {
+    coin_dialog.value = true;
+    coind_dialog_tab.value = 'buy';
+}
+function openSellPanel() {
+    coin_dialog.value = true;
+    coind_dialog_tab.value = 'sell';
+}
 const form = ref({
     name: { text: null, required: true, error: null },
     total_coins: { text: 1000, required: true, error: null },
@@ -202,7 +212,9 @@ const { data, isError, enableValidation, disableValidation } = useForm(
     true
 );
 
-const modal = ref(false);
+const create_coin_dialog = ref(false);
+
+const selected_coin = ref(null)
 
 async function createCoin() {
     await enableValidation();
@@ -224,7 +236,7 @@ async function createCoin() {
                 summary: "Монета создана",
                 life: 3000,
             });
-            modal.value = false
+            create_coin_dialog.value = false
         })
         .catch((err) => {
             toast.add({
@@ -234,6 +246,10 @@ async function createCoin() {
                 life: 3000,
             });
         });
+}
+
+function selectCoin(coin: ICoin) {
+    selected_coin.value = coin;
 }
 </script>
 

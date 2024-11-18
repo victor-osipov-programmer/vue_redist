@@ -60,9 +60,6 @@ hr {
     gap: 0.2rem;
 }
 
-dialog {
-    /* background-color: white; */
-}
 .p-dialog-header {
     padding-block: 10px !important;
 }

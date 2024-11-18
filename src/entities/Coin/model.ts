@@ -1,16 +1,17 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, type Ref } from "vue";
 import { fetchCoins } from "./api";
+import type { ICoin } from "./types";
 
 export const useCoinModel = defineStore('coin', () => {
-    const coins = ref([])
+    const coins = ref<ICoin[]>([])
     async function getCoins() {
         const response = await fetchCoins()
-        coins.value = response.data
+        coins.value = response.data as ICoin[]
     }
 
     return {
-        coins,
-        getCoins
-    }
+        coins: coins,
+        getCoins,
+    };
 })
