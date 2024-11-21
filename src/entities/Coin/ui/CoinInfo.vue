@@ -1,7 +1,7 @@
 <template>
     <div class="coin-info info">
         <div class="progress">
-            <v-tooltip text="100% = продажа банку открыта (доход с комиссии / рассход)" location="top">
+            <v-tooltip text="100% = продажа банку открыта (доход с комиссии / рассход банка)" location="top">
                 <template v-slot:activator="{ props }">
                     <ProgressBar
                         v-bind="props"

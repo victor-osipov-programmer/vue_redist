@@ -13,7 +13,7 @@
                 
                 <Coin v-for="coin in coin_model.coins" :coin @click="selectCoin(coin)" @open:buy_panel="openBuyPanel" @open:sell_panel="openSellPanel"></Coin>
                 <p class="coins__not" v-if="coin_model.coins.length === 0">
-                    Монеты не найдены
+                    {{ coin_model.message }}
                 </p>
             </div>
         </div>
@@ -171,7 +171,7 @@ import { Coin, useCoinModel, type ICoin } from "@/entities/Coin";
 import { http } from "@/shared/api";
 import { useForm } from "@/shared/libs/form";
 import { useToast } from "primevue/usetoast";
-import { nextTick, ref, useTemplateRef } from "vue";
+import { computed, nextTick, ref, useTemplateRef } from "vue";
 import CoinDialog from "@/features/CoinDialog.vue";
 import { useOrderModel } from "@/entities/Order/model";
 
@@ -214,7 +214,10 @@ const { data, isError, enableValidation, disableValidation } = useForm(
 
 const create_coin_dialog = ref(false);
 
-const selected_coin = ref(null)
+const selected_coin_id = ref(null)
+const selected_coin = computed(() => {
+    return coin_model.coins.find(coin => coin.id == selected_coin_id.value)
+})
 
 async function createCoin() {
     await enableValidation();
@@ -249,7 +252,7 @@ async function createCoin() {
 }
 
 function selectCoin(coin: ICoin) {
-    selected_coin.value = coin;
+    selected_coin_id.value = coin.id;
 }
 </script>
 

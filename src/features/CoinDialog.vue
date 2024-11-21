@@ -88,11 +88,15 @@
                     <v-tabs-window-item class="panel" value="orders">
                         <div class="orders-wrap">
                             <div class="orders">
-                                <Order
-                                    v-for="order in order_model.orders"
+                                <!-- <Order
+                                    v-for="order in coin_orders.coin_orders"
                                     :order
                                     @cancel_order="cancelOrder(order.id)"
-                                ></Order>
+                                ></Order> -->
+                                <div>
+                                    {{ coin_orders.coin_orders }}
+                                    <!-- {{ coin_orders.message }} -->
+                                </div>
                             </div>
                         </div>
                     </v-tabs-window-item>
@@ -116,6 +120,7 @@ const props = defineProps<{
     coin: ICoin;
 }>();
 
+
 const coin_dialog = defineModel<boolean>();
 const tab = defineModel<string>("tab");
 const user_model = useUserModel();
@@ -132,6 +137,8 @@ const form = ref({
     number_coins,
 });
 const { isError, data, enableValidation, disableValidation } = useForm(form);
+const coin_orders = order_model.useCoinOrders(props.coin.id)
+console.log(coin_orders.coin_orders.value)
 
 function openBuyPanel() {
     coin_dialog.value = true;
@@ -164,9 +171,7 @@ async function buyCoins() {
         })
             .then((response) => {
                 console.log(response.data);
-                setTimeout(() => {
-                    updateModels();
-                }, 500);
+                updateModels();
 
                 toast.add({
                     severity: "success",
@@ -190,9 +195,7 @@ async function buyCoins() {
         })
             .then((response) => {
                 console.log(response);
-                setTimeout(() => {
-                    updateModels();
-                }, 500);
+                updateModels();
 
                 toast.add({
                     severity: "success",
@@ -230,9 +233,7 @@ async function sellCoins() {
         })
             .then((response) => {
                 console.log(response.data);
-                setTimeout(() => {
-                    updateModels();
-                }, 500);
+                updateModels();
 
                 toast.add({
                     severity: "success",
@@ -256,9 +257,7 @@ async function sellCoins() {
         })
             .then((response) => {
                 console.log(response.data);
-                setTimeout(() => {
-                    updateModels();
-                }, 500);
+                updateModels();
 
                 toast.add({
                     severity: "success",
@@ -278,10 +277,16 @@ async function sellCoins() {
 }
 
 async function cancelOrder(id: number) {
-    await order_model.cancelOrder(id);
-    setTimeout(() => {
-        updateModels();
-    }, 500);
+    await order_model.cancelOrder(id).then(() => {
+        order_model.deleteOrder(id);
+
+        toast.add({
+            severity: "success",
+            summary: "Ордер отменён",
+            life: 3000,
+        });
+    });
+    updateModels();
 }
 
 function updateModels() {

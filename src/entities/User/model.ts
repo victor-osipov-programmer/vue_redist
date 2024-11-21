@@ -4,11 +4,13 @@ import { fetchCoins as fetchUser } from "./api";
 import { http } from "@/shared/api";
 import { useToast } from "primevue/usetoast";
 import { useCoinModel } from "../Coin";
+import { useOrderModel } from "../Order/model";
 
 
 export const useUserModel = defineStore("user", () => {
     const toast = useToast()
     const coin_model = useCoinModel()
+    const order_model = useOrderModel();
     const user = ref(null);
     watch(user, (value, old_value) => {
         if (!old_value && user.value) {
@@ -22,6 +24,7 @@ export const useUserModel = defineStore("user", () => {
                 }
                 getUser()
                 coin_model.getCoins()
+                order_model.getOrders()
             })
             .listen("Sell", (e) => {
                 console.log('Sell', e);
@@ -31,6 +34,7 @@ export const useUserModel = defineStore("user", () => {
                 }
                 getUser()
                 coin_model.getCoins()
+                order_model.getOrders();
             });
         }
     })
