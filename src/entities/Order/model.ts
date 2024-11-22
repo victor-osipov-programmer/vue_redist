@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect, type Ref } from "vue";
 import { OrderApi } from ".";
 import { useDebouncedRefHistory } from "@vueuse/core";
 
@@ -46,23 +46,23 @@ export const useOrderModel = defineStore("order", () => {
         return orders.value.filter((order) => order.coin_id == coin_id);
     }
 
-    function useCoinOrders(coin_id: number) {
+    function useCoinOrders(coin_id: Ref<number>) {
         // console.log(orders.value.filter((order) => order.coin_id == coin_id));
+        // watchEffect(() => {});
         const coin_orders = computed(() => {
-            return orders.value.filter((order) => order.coin_id == coin_id);
+            return orders.value.filter((order) => order.coin_id == coin_id.value);
         });
-        // const message = computed(() => {
-        //     return isFetching.value
-        //         ? "Загрузка ордеров..."
-        //         : orders.value.length == 0
-        //         ? "Ордеры не найдены"
-        //         : null;
-        // });
+        const coin_message = computed(() => {
+            return isFetching.value
+                ? "Загрузка ордеров..."
+                : coin_orders.value.length == 0
+                ? "Ордеры не найдены"
+                : null;
+        });
 
         return {
-            orders,
-            message,
-            coin_orders,
+            orders: coin_orders,
+            message: coin_message,
         };
     }
 

@@ -88,14 +88,13 @@
                     <v-tabs-window-item class="panel" value="orders">
                         <div class="orders-wrap">
                             <div class="orders">
-                                <!-- <Order
-                                    v-for="order in coin_orders.coin_orders"
+                                <Order
+                                    v-for="order in coin_orders.orders.value"
                                     :order
                                     @cancel_order="cancelOrder(order.id)"
-                                ></Order> -->
-                                <div>
-                                    {{ coin_orders.coin_orders }}
-                                    <!-- {{ coin_orders.message }} -->
+                                ></Order>
+                                <div v-if="coin_orders.orders.value.length === 0">
+                                    {{ coin_orders.message.value }}
                                 </div>
                             </div>
                         </div>
@@ -114,7 +113,7 @@ import { useUserModel } from "@/entities/User/model";
 import { http } from "@/shared/api";
 import { useForm } from "@/shared/libs/form";
 import { useToast } from "primevue/usetoast";
-import { ref, watchEffect } from "vue";
+import { ref, toRef, watchEffect } from "vue";
 
 const props = defineProps<{
     coin: ICoin;
@@ -126,7 +125,6 @@ const tab = defineModel<string>("tab");
 const user_model = useUserModel();
 const coin_model = useCoinModel();
 const order_model = useOrderModel();
-// const tab = ref('buy');
 const price_coin = ref({ text: props.coin.price_buy_coin });
 const number_coins = ref({ text: null });
 const is_bank = ref(false);
@@ -136,9 +134,8 @@ const form = ref({
     price_coin,
     number_coins,
 });
-const { isError, data, enableValidation, disableValidation } = useForm(form);
-const coin_orders = order_model.useCoinOrders(props.coin.id)
-console.log(coin_orders.coin_orders.value)
+const { isError, enableValidation, disableValidation } = useForm(form);
+const coin_orders = order_model.useCoinOrders(toRef(() => props.coin.id));
 
 function openBuyPanel() {
     coin_dialog.value = true;
@@ -148,10 +145,6 @@ function openSellPanel() {
     coin_dialog.value = true;
     tab.value = "sell";
 }
-// function openOrdersPanel() {
-//     coin_dialog.value = true;
-//     tab.value = "orders";
-// }
 
 async function buyCoins() {
     await enableValidation();
@@ -161,7 +154,7 @@ async function buyCoins() {
             severity: "error",
             summary: "Ошибка",
             detail: "Заполните правильно поля",
-            // life: 3000,
+            life: 3000,
         });
     }
     if (is_bank.value) {
