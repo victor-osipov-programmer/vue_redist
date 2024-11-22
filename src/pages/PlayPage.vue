@@ -174,15 +174,19 @@ import { useToast } from "primevue/usetoast";
 import { computed, nextTick, ref, useTemplateRef } from "vue";
 import CoinDialog from "@/features/CoinDialog.vue";
 import { useOrderModel } from "@/entities/Order/model";
+import { useUserModel } from "@/entities/User/model";
 
 const toast = useToast();
+const user_model = useUserModel();
 const coin_model = useCoinModel();
 const order_model = useOrderModel();
 // const coin_dialog = ref(false)
 const coin_dialog = ref(false)
 const coind_dialog_tab = ref('buy')
 coin_model.getCoins();
-order_model.getOrders()
+if (user_model.is_login) {
+    order_model.getOrders()
+}
 
 function openBuyPanel() {
     coin_dialog.value = true;

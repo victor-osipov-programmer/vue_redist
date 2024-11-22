@@ -1,5 +1,5 @@
 import { http } from "@/shared/api";
 
-export function fetchCoins() {
-    return http.get('/api/coin');
+export function fetchCoins(url: string) {
+    return http.get(url);
 }
