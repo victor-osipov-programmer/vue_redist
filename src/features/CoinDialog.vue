@@ -290,7 +290,6 @@ async function cancelOrder(id: number) {
 function updateModels() {
     user_model.getUser();
     coin_model.getCoins();
-    order_model.getOrders();
 }
 
 defineExpose({

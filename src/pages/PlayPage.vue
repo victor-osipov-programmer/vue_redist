@@ -188,9 +188,6 @@ const order_model = useOrderModel();
 const coin_dialog = ref(false)
 const coind_dialog_tab = ref('buy')
 coin_model.getCoins();
-if (user_model.is_login) {
-    order_model.getOrders()
-}
 
 function openBuyPanel() {
     coin_dialog.value = true;
