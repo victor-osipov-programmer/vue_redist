@@ -24,7 +24,6 @@ export const useUserModel = defineStore("user", () => {
                 }
                 getUser()
                 coin_model.getCoins()
-                order_model.getOrders()
             })
             .listen("Sell", (e) => {
                 console.log('Sell', e);
@@ -34,7 +33,6 @@ export const useUserModel = defineStore("user", () => {
                 }
                 getUser()
                 coin_model.getCoins()
-                order_model.getOrders();
             });
         }
     })
