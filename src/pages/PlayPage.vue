@@ -15,7 +15,11 @@
                 <p class="coins__not" v-if="coin_model.coins.length === 0">
                     {{ coin_model.message }}
                 </p>
+
+                
             </div>
+
+            <v-pagination v-model="coin_model.current_page" :length="coin_model.pages"></v-pagination>
         </div>
 
         <CoinDialog v-if="selected_coin" v-model="coin_dialog" v-model:tab="coind_dialog_tab" :coin="selected_coin"/>
@@ -293,5 +297,8 @@ function selectCoin(coin: ICoin) {
 .p-floatlabel:first-child {
     grid-column: span 3;
     margin-bottom: 1rem;
+}
+.v-pagination {
+    margin-top: 1rem;
 }
 </style>

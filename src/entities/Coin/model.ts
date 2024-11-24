@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref, watch, type Ref } from "vue";
+import { computed, ref, watch, watchEffect, type Ref } from "vue";
 import { fetchCoins } from "./api";
 import type { ICoin } from "./types";
 import { useDebouncedRefHistory } from "@vueuse/core";
@@ -12,21 +12,9 @@ interface ILink {
 
 export const useCoinModel = defineStore('coin', () => {
     const coins = ref<ICoin[]>([])
-    const links = ref<ILink[]>([]);
-    const { history } = useDebouncedRefHistory(coins, {
-        deep: true,
-        debounce: 1000,
-    });
-    const url = ref("/api/coin");
-    watch(history, () => {
-        if (
-            JSON.stringify(history.value[0].snapshot) !=
-            JSON.stringify(history.value[1].snapshot)
-        ) {
-            console.log("update coins");
-            getCoins();
-        }
-    });
+    const pages = ref<number>(0);
+    const current_page = ref<number>(1);
+    const url = computed(() => `/api/coin?page=${current_page.value}&per_page=${4}`);
     const isFetching = ref<boolean>(false);
     const message = computed(() => {
         return isFetching.value
@@ -39,13 +27,21 @@ export const useCoinModel = defineStore('coin', () => {
         isFetching.value = true;
         const response = await fetchCoins(url.value);
         isFetching.value = false;
+
         coins.value = response.data.data as ICoin[]
+        pages.value = Math.ceil(response.data.total / response.data.per_page)
     }
+
+    watchEffect(() => {
+        getCoins()
+    })
 
     return {
         coins,
         isFetching,
         message,
         getCoins,
+        pages,
+        current_page,
     };
 })

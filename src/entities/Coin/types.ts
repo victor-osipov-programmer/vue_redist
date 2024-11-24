@@ -22,4 +22,5 @@ export interface ICoin {
     created_at: string;
     updated_at: string;
     user_coins: number;
+    orders: IOrder[]
 }

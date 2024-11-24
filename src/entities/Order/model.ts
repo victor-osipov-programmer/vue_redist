@@ -5,19 +5,6 @@ import { useDebouncedRefHistory } from "@vueuse/core";
 
 export const useOrderModel = defineStore("order", () => {
     const orders = ref<IOrder[]>([]);
-    const { history } = useDebouncedRefHistory(orders, {
-        deep: true,
-        debounce: 1000,
-    });
-    watch(history, () => {
-        if (
-            JSON.stringify(history.value[0].snapshot) !=
-            JSON.stringify(history.value[1].snapshot)
-        ) {
-            console.log("update orders");
-            getOrders();
-        }
-    });
     const isFetching = ref<boolean>(false);
     const message = computed(() => {
         return isFetching.value
@@ -47,8 +34,6 @@ export const useOrderModel = defineStore("order", () => {
     }
 
     function useCoinOrders(coin_id: Ref<number>) {
-        // console.log(orders.value.filter((order) => order.coin_id == coin_id));
-        // watchEffect(() => {});
         const coin_orders = computed(() => {
             return orders.value.filter((order) => order.coin_id == coin_id.value);
         });
@@ -67,8 +52,8 @@ export const useOrderModel = defineStore("order", () => {
     }
 
     return {
-        orders,
-        message,
+        // orders,
+        // message,
         isFetching,
         getOrders,
         cancelOrder,

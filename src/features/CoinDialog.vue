@@ -89,12 +89,18 @@
                         <div class="orders-wrap">
                             <div class="orders">
                                 <Order
-                                    v-for="order in coin_orders.orders.value"
+                                    v-for="order in coin.orders"
                                     :order
                                     @cancel_order="cancelOrder(order.id)"
                                 ></Order>
-                                <div v-if="coin_orders.orders.value.length === 0">
-                                    {{ coin_orders.message.value }}
+                                <div v-if="coin.orders.length === 0">
+                                    {{
+                                        coin_model.isFetching
+                                            ? "Загрузка ордеров..."
+                                            : coin.orders.length == 0
+                                            ? "Ордеры не найдены"
+                                            : null
+                                    }}
                                 </div>
                             </div>
                         </div>
@@ -119,7 +125,6 @@ const props = defineProps<{
     coin: ICoin;
 }>();
 
-
 const coin_dialog = defineModel<boolean>();
 const tab = defineModel<string>("tab");
 const user_model = useUserModel();
@@ -135,7 +140,7 @@ const form = ref({
     number_coins,
 });
 const { isError, enableValidation, disableValidation } = useForm(form);
-const coin_orders = order_model.useCoinOrders(toRef(() => props.coin.id));
+// const coin_orders = order_model.useCoinOrders(toRef(() => props.coin.id));
 
 function openBuyPanel() {
     coin_dialog.value = true;
@@ -271,7 +276,7 @@ async function sellCoins() {
 
 async function cancelOrder(id: number) {
     await order_model.cancelOrder(id).then(() => {
-        order_model.deleteOrder(id);
+        // order_model.deleteOrder(id);
 
         toast.add({
             severity: "success",
