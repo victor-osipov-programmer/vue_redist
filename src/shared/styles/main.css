@@ -9,7 +9,7 @@
 }
 
 :root {
-    --color-bg-primary: rgb(70, 70, 235);
+    --color-bg-primary: rgb(24, 103, 192);
     --color-text-primary: rgb(255, 255, 255);
     --color-grey: rgb(204, 204, 204);
     --color-white: rgb(248, 248, 248);
@@ -28,7 +28,7 @@
     margin: 0 auto;
     /* background-color: var(--color-bg-primary);
     color: var(--color-text-primary); */
-    padding: 1rem;
+    padding-inline: 1rem;
     border-radius: 5px;
 }
 
