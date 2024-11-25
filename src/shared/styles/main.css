@@ -66,3 +66,7 @@ hr {
 .p-component {
     font-family: Roboto;
 }
+
+.router-link-active {
+    color: white;
+}
