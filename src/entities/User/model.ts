@@ -4,14 +4,13 @@ import { fetchCoins as fetchUser } from "./api";
 import { http } from "@/shared/api";
 import { useToast } from "primevue/usetoast";
 import { useCoinModel } from "../Coin";
-import { useOrderModel } from "../Order/model";
+import type { IUser } from "./types";
 
 
 export const useUserModel = defineStore("user", () => {
     const toast = useToast()
     const coin_model = useCoinModel()
-    const order_model = useOrderModel();
-    const user = ref(null);
+    const user = ref<null | IUser>(null);
     watch(user, (value, old_value) => {
         if (!old_value && user.value) {
             console.log('connected', `users.${user.value.id}`)
