@@ -1,8 +1,8 @@
 <template>
     <div class="replenishment-page page">
         <div class="container">
-            <div class="replenishment__info">
-                <table>
+            <div class="replenishment__header">
+                <table class="replenishment__table">
                     <thead>
                         <tr>
                             <th class="text-left">Номер пополнения или кол-во рефералов</th>
@@ -17,7 +17,7 @@
                     </tbody>
                 </table>
 
-                <div class="replenishment__text">
+                <div class="info-plate">
                     <p>Минимальное пополнение 19 руб.</p>
                     <p>Минимальный вывод 19 руб.</p>
                     <p>Комиссия при выводе 20%</p>
@@ -60,17 +60,7 @@ const current_bonus = computed(() => bonuses.value.find(item => item.number == r
 </script>
 
 <style scoped>
-table {
-    box-shadow: 0px 10px 40px 0 rgba(34, 60, 80, 0.05);
-    border-radius: 5px;
-    width: 100%;
-}
-th {
-    color: var(--color-grey);
-}
-td, th {
-    padding: 1rem;
-}
+
 .number {
     font-size: 1.5rem;
 }
@@ -78,23 +68,11 @@ td, th {
     color: green;
     font-size: 1.5rem;
 }
-.replenishment__info {
+.replenishment__header {
     display: flex;
     gap: 1rem;
     margin-bottom: 3rem;
     
-}
-.replenishment__text {
-    /* background-color: rgba(143, 250, 116, 0.315); */
-    box-shadow: 0px 10px 40px 0 rgba(34, 60, 80, 0.05);
-    border-radius: 5px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.25rem;
 }
 .current-bonus {
     background-color: rgba(143, 250, 116, 0.315);
@@ -102,6 +80,7 @@ td, th {
 .replenishment__title {
     font-size: 1.25rem;
     margin-bottom: 1rem;
+    color: grey;
     color: var(--color-grey);
 }
 .replenishment__items {

@@ -27,7 +27,6 @@ user_model.getUser()
     display: flex;
     align-items: center;
     gap: 1rem;
-    cursor: pointer;
 }
 .user-balance {
     margin-left: 1rem;
