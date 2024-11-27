@@ -12,10 +12,8 @@ router.beforeEach((to, from) => {
 
     if (
         !user_model.is_login &&
-        to.name !== 'login' && 
-        to.name !== 'play' && 
-        to.name !== 'about'
+        !["login", "register", "play", "about"].includes(String(to.name))
     ) {
-        return { name: 'login' }
+        return { name: "login" };
     }
 })

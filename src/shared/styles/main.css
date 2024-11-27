@@ -98,3 +98,10 @@ td, th {
     display: flex;
     justify-content: end;
 }
+
+.form__header {
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}

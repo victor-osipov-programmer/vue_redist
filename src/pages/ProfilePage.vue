@@ -117,16 +117,9 @@ async function logout() {
 .logout-btn {
     width: max-content;
 }
-.profile__container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-}
 .profile-page {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     flex-grow: 1;
 }
 

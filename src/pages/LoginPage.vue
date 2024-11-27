@@ -77,10 +77,5 @@ async function clickLogin() {
 .app-input :deep(.error) {
     color: white;
 }
-.form__header {
-    color: white;
-    text-align: center;
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-}
+
 </style>

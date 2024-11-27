@@ -8,7 +8,7 @@
         </template>
         <template v-else>
             <router-link :to="{name: 'login'}">Войти</router-link>
-            <router-link :to="{name: 'login'}">Зарегаться</router-link>
+            <router-link :to="{name: 'register'}">Зарегаться</router-link>
         </template>
         
     </div>
