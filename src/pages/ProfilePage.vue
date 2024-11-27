@@ -10,19 +10,21 @@
                             <tr>
                                 <td>Имя</td>
                                 <td class="profile__value">
-                                    <input type="text" v-model="name" @keyup="change($event, changeName)">
+                                    <input ref="input_ref" class="input" :class="{'input-edit': is_edit}" :disabled="!is_edit" type="text" v-model="name">
                                 </td>
                             </tr>
                             <tr>
                                 <td>Email</td>
                                 <td class="profile__value">
-                                    <input type="text" v-model="email" @keyup="change($event, changeEmail)">
+                                    <router-link class="link" v-if="is_edit" :to="{name: 'about'}">{{ email }}</router-link>
+                                    <p v-else>{{ email }}</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Телефон</td>
                                 <td class="profile__value">
-                                    <input type="text" v-model="phone" @keyup="change($event, changePhone)">
+                                    <router-link class="link" v-if="is_edit" :to="{name: 'about'}">{{ phone }}</router-link>
+                                    <p v-else>{{ phone }}</p>
                                 </td>
                             </tr>
                             <tr>
@@ -40,7 +42,10 @@
                     </table>
                 </div>
 
-                <div class="end">
+                <div class="profile__footer">
+                    <p v-if="!is_edit" @click="edit" class="profile__edit">Редактировать</p>
+                    <p v-else @click="saveName" class="profile__edit">Сохранить</p>
+
                     <AppButton
                         class="logout-btn"
                         color="primary"
@@ -57,13 +62,38 @@
 import AppButton from "@/shared/ui/AppButton.vue";
 import { useUserModel } from "@/entities/User/model";
 import { useToast } from "primevue/usetoast";
-import { ref, watchEffect } from "vue";
+import { ref, useTemplateRef, watchEffect } from "vue";
+import { http } from "@/shared/api";
 
 const user_model = useUserModel();
 const toast = useToast();
 const name = ref('Загрузка...')
 const email = ref('Загрузка...')
 const phone = ref('Загрузка...')
+const is_edit = ref(false)
+const input_ref = useTemplateRef('input_ref')
+
+
+
+function edit() {
+    is_edit.value = true
+    setTimeout(() => {
+        input_ref.value.focus()
+    }, 0)
+}
+function saveName() {
+    is_edit.value = false
+
+    if (user_model.user.name !== name.value) {
+        http.post('/api/user/name', {
+            name: name.value
+        })
+        .then(() => {
+            user_model.getUser()
+            toast.add({severity: 'success', summary: 'Вы изменили имя', life: 3000})
+        })
+    }
+}
 
 watchEffect(() => {
     if (user_model.user?.name && user_model.user?.email && user_model.user?.phone) {
@@ -72,24 +102,6 @@ watchEffect(() => {
         phone.value = user_model.user?.phone;
     }
 })
-
-
-function change(e, callback) {
-    if (e.key == 'Enter')  {
-        callback(e)
-        e.target.blur()
-    }
-}
-function changeName(e) {
-    console.log('name')
-}
-function changeEmail(e) {
-    console.log('email')
-}
-function changePhone(e) {
-    console.log('phone')
-}
-
 
 async function logout() {
     user_model.logout();
@@ -107,6 +119,7 @@ async function logout() {
 }
 .profile__container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-grow: 1;
@@ -142,16 +155,29 @@ async function logout() {
     text-align: center;
     font-size: 1.5rem;
 }
-.profile__value {
-    /* cursor: pointer; */
-}
 .input {
-    padding: 0.5rem;
     border: none;
-    outline: 1px solid black;
-    border-radius: 5px;
+    outline: none;
+    width: max-content;
+    border-bottom: 1px solid transparent;
+}
+.input-edit {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 .v-tooltip {
     cursor: pointer;
+}
+.profile__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+.profile__edit {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.link {
+    text-decoration: underline;
+    color: var(--color-bg-primary);
 }
 </style>
