@@ -21,10 +21,17 @@ export function useForm(form, internal_validation = false) {
 
         return false;
     });
-    const enableValidation = () => {
-        for (let key in form) {
-            form[key].validation = true;
+    const enableValidation = (elements = []) => {
+        if (elements.length === 0) {
+            for (let key in form) {
+                form[key].validation = true;
+            }
+        } else {
+            for (let key of elements) {
+                form[key].validation = true;
+            }
         }
+        
     };
     const disableValidation = () => {
         for (let key in form) {

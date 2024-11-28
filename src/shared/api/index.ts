@@ -43,7 +43,15 @@ http.interceptors.response.use(function (response) {
             "Доход банка должен быть больше расходов"
         )
         .replace("Your coins balance is", "Ваш баланс монет")
-        .replace("Unauthenticated.", "Вы не авторизованы");
+        .replace("Unauthenticated.", "Вы не авторизованы")
+        .replace(
+            /The (\w+) has already been taken./i,
+            "$1 уже занят"
+        )
+        .replace(
+            'password',
+            "Пароль"
+        )
 
     if (error.status == 401) {
         const user_model = useUserModel()

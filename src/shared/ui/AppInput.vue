@@ -1,6 +1,6 @@
 <template>
     <div class="app-input">
-        <input :disabled :placeholder :type class="input" v-model="model.text" max="100">
+        <input :disabled :name :placeholder :type class="input" v-model="model.text" max="100">
         <p v-if="model.error" class="error">{{ model.error }}</p>
     </div>
 </template>
@@ -9,10 +9,7 @@
 import { nextTick, watch, watchEffect } from 'vue';
 
 const model = defineModel()
-const props = defineProps(['email', 'min', 'placeholder', 'disabled', 'type', 'max', 'required', 'validation'])
-// defineOptions({
-//     inheritAttrs: false
-// })
+const props = defineProps(['email', 'min', 'placeholder', 'disabled', 'type', 'max', 'required', 'validation', 'password_value', 'confirmation', 'name'])
 
 watchEffect(() => {
     if (!model.value.validation) {
@@ -31,6 +28,11 @@ watchEffect(() => {
     if (props.min !== undefined) {
         if (model.value.text.length < props.min) {
             return model.value.error = `Мин. длина ${props.min}`
+        }
+    }
+    if (props.confirmation !== undefined) {
+        if (model.value.text !== props.password_value) {
+            return model.value.error = `Пароли не совподают`
         }
     }
     

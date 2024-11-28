@@ -2,8 +2,8 @@
     <div class="login-page page">
         <div class="form">
             <h3 class="form__header">Войти</h3>
-            <AppInput placeholder="Email" v-model="form.email" email required></AppInput>
-            <AppInput placeholder="Пароль" v-model="form.password" min="3" required></AppInput>
+            <AppInput placeholder="Email" v-model="form.email" email required name="email"></AppInput>
+            <AppInput placeholder="Пароль" v-model="form.password" min="8" required name="password"></AppInput>
             <AppButton class="login-button" @click="clickLogin">Войти</AppButton>
         </div>
     </div>
