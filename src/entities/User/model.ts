@@ -10,6 +10,7 @@ import type { IUser } from "./types";
 export const useUserModel = defineStore("user", () => {
     const toast = useToast()
     const coin_model = useCoinModel()
+    const isFetching = ref<boolean>(false);
     const user = ref<null | IUser>(null);
     watch(user, (value, old_value) => {
         if (!old_value && user.value) {
@@ -42,13 +43,17 @@ export const useUserModel = defineStore("user", () => {
     });
 
     async function login() {
+        isFetching.value = true;
         const response = await fetchUser();
+        isFetching.value = false;
         is_login.value = true;
         user.value = response.data;
     }
     async function getUser() {
         if (is_login.value) {
+            isFetching.value = true;
             const response = await fetchUser();
+            isFetching.value = false;
             user.value = response.data;
         }
     }
@@ -65,6 +70,7 @@ export const useUserModel = defineStore("user", () => {
         getUser,
         logout,
         is_login,
-        login
+        login,
+        isFetching,
     };
 });

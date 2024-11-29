@@ -58,12 +58,14 @@
 </template>
 
 <script lang="ts" setup>
+import { useUserModel } from "@/entities/User/model";
 import { http } from "@/shared/api";
 import { useForm } from "@/shared/libs/form";
 import { useToast } from "primevue/usetoast";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+const user_model = useUserModel()
 const toast = useToast();
 const router = useRouter();
 const form = ref({
@@ -115,7 +117,11 @@ async function register() {
                 detail: "Осталось только подтвердить почту",
                 life: 5000,
             });
-            router.push({ name: "login" });
+            http.post("/login", data.value).then(async () => {
+                await user_model.login()
+                router.push({ name: "profile" });
+
+            })
         })
         .catch((err) => {
             toast.add({

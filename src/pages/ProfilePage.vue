@@ -5,7 +5,7 @@
                 <div class="profile__header">
                     <h1 class="profile__title">Профиль</h1>
 
-                    <table>
+                    <table class="profile__table">
                         <tbody>
                             <tr>
                                 <td>Имя</td>
@@ -16,8 +16,9 @@
                             <tr>
                                 <td>Email</td>
                                 <td class="profile__value">
-                                    <router-link class="link" v-if="is_edit" :to="{name: 'about'}">{{ email }}</router-link>
-                                    <p v-else>{{ email }}</p>
+                                    <input ref="input_ref" class="input" :class="{'input-edit': is_edit}" :disabled="!is_edit" type="text" v-model="email">
+                                    <!-- <router-link class="link" v-if="is_edit" :to="{name: 'about'}">{{ email }}</router-link>
+                                    <p v-else>{{ email }}</p> -->
                                 </td>
                             </tr>
                             <tr>
@@ -44,7 +45,7 @@
 
                 <div class="profile__footer">
                     <p v-if="!is_edit" @click="edit" class="profile__edit">Редактировать</p>
-                    <p v-else @click="saveName" class="profile__edit">Сохранить</p>
+                    <p v-else @click="save" class="profile__edit">Сохранить</p>
 
                     <AppButton
                         class="logout-btn"
@@ -81,11 +82,11 @@ function edit() {
         input_ref.value.focus()
     }, 0)
 }
-function saveName() {
+function save() {
     is_edit.value = false
 
     if (user_model.user.name !== name.value) {
-        http.post('/api/user/name', {
+        http.patch('/api/user/name', {
             name: name.value
         })
         .then(() => {
@@ -93,15 +94,31 @@ function saveName() {
             toast.add({severity: 'success', summary: 'Вы изменили имя', life: 3000})
         })
     }
+    if (user_model.user.email !== email.value) {
+        http.patch('/api/user/email', {
+            email: email.value
+        })
+        .then(() => {
+            user_model.getUser()
+            toast.add({severity: 'info', summary: 'Подтвердите почту', life: 3000})
+        })
+    }
 }
 
 watchEffect(() => {
-    if (user_model.user?.name && user_model.user?.email && user_model.user?.phone) {
-        name.value = user_model.user?.name;
-        email.value = user_model.user?.email;
-        phone.value = user_model.user?.phone;
+    if (!user_model.isFetching) {
+        name.value = user_model.user?.name ?? '-';
+        email.value = user_model.user?.email ?? '-';
+        phone.value = user_model.user?.phone ?? '-';
     }
 })
+// watchEffect(() => {
+//     if (is_edit.value) {
+//         name.value = user_model.user?.name ?? '-';
+//         email.value = user_model.user?.email ?? '-';
+//         phone.value = user_model.user?.phone ?? '-';
+//     }
+// })
 
 async function logout() {
     user_model.logout();
@@ -129,6 +146,11 @@ async function logout() {
     box-shadow: 0px 10px 40px 0 rgba(34, 60, 80, 0.05);
     display: flex;
     flex-direction: column;
+    /* min-width: 500px; */
+    
+}
+.profile__table {
+    width: 100%;
 }
 .profile__header {
     display: flex;
@@ -151,8 +173,9 @@ async function logout() {
 .input {
     border: none;
     outline: none;
-    width: max-content;
+    width: 300px;
     border-bottom: 1px solid transparent;
+
 }
 .input-edit {
     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
