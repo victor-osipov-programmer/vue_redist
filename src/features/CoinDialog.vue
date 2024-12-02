@@ -182,7 +182,7 @@ async function buyCoins() {
                 toast.add({
                     severity: "error",
                     summary: "Ошибка покупки",
-                    detail: err.response.data?.message,
+                    detail: err.response?.data?.message,
                     life: 3000,
                 });
             });
@@ -206,7 +206,7 @@ async function buyCoins() {
                 toast.add({
                     severity: "error",
                     summary: "Ошибка покупки",
-                    detail: err.response.data?.message,
+                    detail: err.response?.data?.message,
                     life: 3000,
                 });
             });
@@ -244,7 +244,7 @@ async function sellCoins() {
                 toast.add({
                     severity: "error",
                     summary: "Ошибка продажи",
-                    detail: err.response.data?.message,
+                    detail: err.response?.data?.message,
                     life: 3000,
                 });
             });
@@ -267,7 +267,7 @@ async function sellCoins() {
                 toast.add({
                     severity: "error",
                     summary: "Ошибка продажи",
-                    detail: err.response.data?.message,
+                    detail: err.response?.data?.message,
                     life: 3000,
                 });
             });

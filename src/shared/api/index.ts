@@ -52,6 +52,10 @@ http.interceptors.response.use(function (response) {
             'password',
             "Пароль"
         )
+        .replace(
+            'The selected code is invalid.',
+            "Не верный код"
+        )
 
     if (error.status == 401) {
         const user_model = useUserModel()

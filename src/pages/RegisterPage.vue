@@ -65,7 +65,7 @@ import { useToast } from "primevue/usetoast";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-const user_model = useUserModel()
+const user_model = useUserModel();
 const toast = useToast();
 const router = useRouter();
 const form = ref({
@@ -107,8 +107,8 @@ async function register() {
             life: 3000,
         });
     }
-    await http.get('/sanctum/csrf-cookie')
-    
+    await http.get("/sanctum/csrf-cookie");
+
     http.post("/register", data.value)
         .then(() => {
             toast.add({
@@ -118,16 +118,15 @@ async function register() {
                 life: 5000,
             });
             http.post("/login", data.value).then(async () => {
-                await user_model.login()
+                await user_model.login();
                 router.push({ name: "profile" });
-
-            })
+            });
         })
         .catch((err) => {
             toast.add({
                 severity: "error",
                 summary: "Ошибка регистрации",
-                detail: err.response.data?.message,
+                detail: err.response?.data?.message,
                 life: 3000,
             });
         });
