@@ -31,8 +31,7 @@
                         :invalid="Boolean(form.name.error)"
                         v-model="form.name.text"
                         inputId="name"
-                        :min="100"
-                        :max="1000000"
+                        
                     />
                     <label for="name">*Название</label>
                 </FloatLabel>
@@ -250,7 +249,7 @@ async function createCoin() {
             toast.add({
                 severity: "error",
                 summary: "Ошибка, монета не создана",
-                detail: "Попробуйте снова",
+                detail: err.response?.data?.message,
                 life: 3000,
             });
         });

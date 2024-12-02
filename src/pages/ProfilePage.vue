@@ -268,8 +268,4 @@ function sendCofirmMail() {
     text-decoration: underline;
     color: grey;
 }
-.profile__value {
-    display: flex;
-    align-items: center;
-}
 </style>

@@ -51,6 +51,7 @@ export const useUserModel = defineStore("user", () => {
     }
     async function getUser() {
         if (is_login.value) {
+            console.log('getUser')
             isFetching.value = true;
             const response = await fetchUser();
             isFetching.value = false;
