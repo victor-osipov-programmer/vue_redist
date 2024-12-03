@@ -50,5 +50,9 @@ const styles: IStyles = useStyles(props);
     font-weight: bold;
     color: v-bind("styles.app_button['color']");
     background-color: v-bind("styles.app_button['background-color']");
+    transition: opacity 0.05s;
+}
+.app-button:active {
+    opacity: 0.8;
 }
 </style>

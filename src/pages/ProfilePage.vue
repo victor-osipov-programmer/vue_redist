@@ -16,7 +16,8 @@
                                         :class="{ 'input-edit': is_edit }"
                                         :disabled="!is_edit"
                                         type="text"
-                                        v-model="name"
+                                        v-model="user_model.user.name"
+                                        @input="is_change_name = true"
                                     />
                                 </td>
                             </tr>
@@ -29,12 +30,11 @@
                                         :class="{ 'input-edit': is_edit }"
                                         :disabled="!is_edit"
                                         type="text"
-                                        v-model="email"
+                                        v-model="user_model.user.email"
+                                        @input="is_change_email = true"
                                     />
 
                                     <button v-if="!user_model.user?.email_verified_at && !user_model.isFetching && !is_edit" class="confirm-button" @click="sendCofirmMail">подтвердить</button>
-                                    <!-- <router-link class="link" v-if="is_edit" :to="{name: 'about'}">{{ email }}</router-link>
-                                    <p v-else>{{ email }}</p> -->
                                 </td>
                             </tr>
                             <tr>
@@ -44,21 +44,15 @@
                                         class="link"
                                         v-if="is_edit"
                                         :to="{ name: 'about' }"
-                                        >{{ phone }}</router-link
+                                        >{{ user_model.user.phone }}</router-link
                                     >
-                                    <p v-else>{{ phone }}</p>
+                                    <p v-else>{{ user_model.user.phone }}</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Дата регистрации</td>
                                 <td class="profile__value">
-                                    {{
-                                        user_model.user?.created_at
-                                            ? new Date(
-                                                  user_model.user?.created_at
-                                              ).toLocaleDateString()
-                                            : "Загрузка..."
-                                    }}
+                                    {{ user_model.user.created_at }}
                                 </td>
                             </tr>
                         </tbody>
@@ -103,13 +97,12 @@ import { http } from "@/shared/api";
 
 const user_model = useUserModel();
 const toast = useToast();
-const name = ref("Загрузка...");
-const email = ref("Загрузка...");
-const phone = ref("Загрузка...");
 const is_edit = ref(false);
 const input_ref = useTemplateRef("input_ref");
 const confirm_email_dialog = ref(false);
 const code = ref(null);
+const is_change_name = ref(false)
+const is_change_email = ref(false)
 
 function edit() {
     is_edit.value = true;
@@ -120,11 +113,12 @@ function edit() {
 async function save() {
     is_edit.value = false;
 
-    if (user_model.user.name !== name.value) {
+    if (is_change_name.value) {
+        is_change_name.value = false
+
         http.patch("/api/user/name", {
-            name: name.value,
+            name: user_model.user.name,
         }).then(() => {
-            user_model.user.name = name.value;
             toast.add({
                 severity: "success",
                 summary: "Вы изменили имя",
@@ -132,20 +126,14 @@ async function save() {
             });
         });
     }
-    if (user_model.user.email !== email.value) {
+    if (is_change_email.value) {
+        is_change_email.value = false
+
         http.get("/api/user/code");
         code.value = null;
         confirm_email_dialog.value = true;
     }
 }
-
-watchEffect(() => {
-    if (!user_model.isFetching) {
-        name.value = user_model.user?.name ?? "-";
-        email.value = user_model.user?.email ?? "-";
-        phone.value = user_model.user?.phone ?? "-";
-    }
-});
 
 async function logout() {
     user_model.logout();
@@ -165,7 +153,7 @@ function confirmEmail() {
         });
     }
     http.patch("/api/user/email", {
-        email: email.value,
+        email: user_model.user.email,
         code: code.value,
     }).then(() => {
         user_model.getUser();

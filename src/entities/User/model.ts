@@ -11,7 +11,17 @@ export const useUserModel = defineStore("user", () => {
     const toast = useToast()
     const coin_model = useCoinModel()
     const isFetching = ref<boolean>(false);
-    const user = ref<null | IUser>(null);
+    const user = ref<null | IUser>({
+        id: null,
+        balance: null,
+        donations: null,
+        email: "Загрузка...",
+        email_verified_at: null,
+        name: "Загрузка...",
+        phone: "Загрузка...",
+        updated_at: null,
+        created_at: "Загрузка...",
+    });
     watch(user, (value, old_value) => {
         if (!old_value && user.value) {
             console.log('connected', `users.${user.value.id}`)
@@ -43,11 +53,12 @@ export const useUserModel = defineStore("user", () => {
     });
 
     async function login() {
+        console.log('login')
         isFetching.value = true;
         const response = await fetchUser();
         isFetching.value = false;
         is_login.value = true;
-        user.value = response.data;
+        user.value = user_format(response.data);
     }
     async function getUser() {
         if (is_login.value) {
@@ -55,7 +66,7 @@ export const useUserModel = defineStore("user", () => {
             isFetching.value = true;
             const response = await fetchUser();
             isFetching.value = false;
-            user.value = response.data;
+            user.value = user_format(response.data);
         }
     }
     async function logout() {
@@ -64,6 +75,12 @@ export const useUserModel = defineStore("user", () => {
         user.value = null;
         window.router.push({ name: "login" });
         await http.get("/logout");
+    }
+    function user_format(user: IUser): IUser {
+        user.created_at = user.created_at ? new Date(user.created_at).toLocaleDateString() : user.created_at
+        user.updated_at = user.updated_at ? new Date(user.updated_at).toLocaleDateString() : user.updated_at
+        user.email_verified_at = user.email_verified_at ? new Date(user.email_verified_at).toLocaleDateString() : user.email_verified_at
+        return user;
     }
 
     return {
