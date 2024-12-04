@@ -15,10 +15,11 @@
                         </FloatLabel>
                         <InputMask
                             id="phone"
-                            v-model="telephone"
+                            v-model="user_model.user.phone"
                             mask="+9 999 999 99 99"
                             placeholder="+7 999 999 99 99"
                             fluid
+                            disabled
                         />
                     </div>
 
@@ -66,11 +67,13 @@ import AppButton from "@/shared/ui/AppButton.vue";
 import { ref } from "vue";
 import { Request } from "@/entities/Request";
 import { useRequestModel } from "@/entities/Request/model";
+import { useUserModel } from "@/entities/User/model";
 
 const number_currency = ref(0);
 const telephone = ref("");
 const method = ref(null);
 const request_model = useRequestModel()
+const user_model = useUserModel()
 
 
 

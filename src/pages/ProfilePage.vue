@@ -40,13 +40,7 @@
                             <tr>
                                 <td>Телефон</td>
                                 <td class="profile__value">
-                                    <router-link
-                                        class="link"
-                                        v-if="is_edit"
-                                        :to="{ name: 'about' }"
-                                        >{{ user_model.user.phone }}</router-link
-                                    >
-                                    <p v-else>{{ user_model.user.phone }}</p>
+                                    <p>{{ user_model.user.phone }}</p>
                                 </td>
                             </tr>
                             <tr>
@@ -60,17 +54,19 @@
                 </div>
 
                 <div class="profile__footer">
-                    <button v-if="!is_edit" @click="edit" class="profile__edit">
-                        Редактировать
-                    </button>
-                    <button v-else @click="save" class="profile__edit">Сохранить</button>
-
                     <AppButton
                         class="logout-btn"
                         color="primary"
                         @click="logout"
                         >Выйти</AppButton
                     >
+
+                    <template v-if="!user_model.isFetching">
+                        <button v-if="!is_edit" @click="edit" class="profile__edit">
+                            Редактировать
+                        </button>
+                        <button v-else @click="save" class="profile__edit">Сохранить</button>
+                    </template>
                 </div>
             </v-card>
 
@@ -238,6 +234,7 @@ function sendCofirmMail() {
 }
 .profile__footer {
     display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: end;
 }

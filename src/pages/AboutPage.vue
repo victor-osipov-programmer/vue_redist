@@ -8,11 +8,11 @@
                     Мы работаем просто, <br />
                     отдаём деньги:
                 </p>
-                <li><v-chip variant="flat" color="green"> Либо хитрому </v-chip></li>
-                <li><v-chip variant="flat" color="green"> Либо умному </v-chip></li>
-                <li><v-chip variant="flat" color="green"> Либо терпеливому </v-chip></li>
+                <li><v-chip variant="flat" color="grey"> Либо хитрому </v-chip></li>
+                <li><v-chip variant="flat" color="grey"> Либо умному </v-chip></li>
+                <li><v-chip variant="flat" color="grey"> Либо терпеливому </v-chip></li>
 
-                <li class="tg"><v-chip href="https://web.telegram.org/" target="_blank" variant="flat" color="green"> Telegram чтобы стать терпеливым </v-chip></li>
+                <li class="tg"><v-chip href="https://web.telegram.org/" target="_blank" variant="flat" color="grey"> Telegram чтобы стать терпеливым </v-chip></li>
             </ul>
 
             <footer class="footer">
